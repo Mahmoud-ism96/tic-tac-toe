@@ -20,13 +20,7 @@ public class TicTacToe extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        System.out.println("Mahmoud");
-         System.out.println("Bassant");
-         System.out.println("Hi !!!");
-         System.out.println("Tic Tac Toe Game");
-        System.out.println("Test Commit");
-                 System.out.println("mazen");
-
+        
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
