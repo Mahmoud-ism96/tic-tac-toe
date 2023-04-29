@@ -22,6 +22,7 @@ public class TicTacToe extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         System.out.println("Mahmoud");
          System.out.println("Bassant");
+         System.out.println("Hi !!!");
         System.out.println("Test Commit");
         
         Scene scene = new Scene(root);
