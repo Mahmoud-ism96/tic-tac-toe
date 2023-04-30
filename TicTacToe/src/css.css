@@ -1,0 +1,13 @@
+.Button{
+    -fx-background-color: green;
+    -fx-background-radius: 30 30 30 30;
+}
+.Button:hover{
+    -fx-background-color: red;
+    -fx-background-radius: 30 30 30 30;
+}
+.OnlineButtons{
+    -fx-background-color: black;
+    -fx-background-radius: 30 30 30 30;
+    -fx-text-fill: white;
+}
