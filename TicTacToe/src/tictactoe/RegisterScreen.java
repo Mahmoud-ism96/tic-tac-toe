@@ -158,7 +158,7 @@ public  class RegisterScreen extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
                 txt_signIn.setFill(BLUE);
-                ScreenController.viewPane(ScreenController.loginScreen);
+                
             }
 
     });
