@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tictactoe.ScreenController">
+   <children>
+      <ImageView fx:id="background" fitHeight="400.0" fitWidth="607.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <ImageView fx:id="icon_username" fitHeight="30.0" fitWidth="30.0" layoutX="203.0" layoutY="176.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="icon_password" fitHeight="30.0" fitWidth="30.0" layoutX="203.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="icon_login" fitHeight="100.0" fitWidth="100.0" layoutX="268.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="icon_back" fitHeight="30.0" fitWidth="30.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <Text fx:id="txt_signUp" layoutX="225.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Donot have Account? Register here" textAlignment="CENTER" />
+      <TextField fx:id="tv_username" layoutX="243.0" layoutY="178.0" promptText="username" style="-fx-border-color: BLACK;" />
+      <TextField fx:id="tv_password" layoutX="243.0" layoutY="232.0" promptText="password" style="-fx-border-color: BLACK;" />
+      <Button fx:id="btn_login" layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="25.0" prefWidth="110.0" style="-fx-background-color: BLACK; -fx-background-radius: 25;" text="Login" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
