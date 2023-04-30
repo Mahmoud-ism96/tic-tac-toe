@@ -21,6 +21,7 @@ public class TicTacToe extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+<<<<<<< HEAD
          AnchorPane root = new AnchorPane();
         
         root.getChildren().add(ScreenController.loginScreen);
@@ -29,6 +30,10 @@ public class TicTacToe extends Application {
    
         ScreenController.viewPane(ScreenController.loginScreen);
 
+=======
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        
+>>>>>>> d36d748e7fc468501b89a7f06976957fdb844216
         Scene scene = new Scene(root);
         stage.setTitle("Tic Tac Toe");
         stage.setScene(scene);
