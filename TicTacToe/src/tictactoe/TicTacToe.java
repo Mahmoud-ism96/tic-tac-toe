@@ -6,11 +6,15 @@
 package tictactoe;
 
 import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import static javafx.scene.paint.Color.BLUE;
 import javafx.stage.Stage;
 
 /**
@@ -19,25 +23,25 @@ import javafx.stage.Stage;
  */
 public class TicTacToe extends Application {
     
+    LoginScreen loginScreen;
+    RegisterScreen registerScreen;
+    Scene loginScene;
+    Scene registerScene;
+    
     @Override
-    public void start(Stage stage) throws Exception {
-
-        Parent root = FXMLLoader.load(getClass().getResource("PlayOnlineScreen.fxml"));
-
-       /*  AnchorPane root = new AnchorPane();
+    public void start(Stage primaryStage) throws Exception {
         
-        root.getChildren().add(ScreenController.loginScreen);
-        root.getChildren().add(ScreenController.registerScreen);
+        initScreens();
         
-   
-        ScreenController.viewPane(ScreenController.loginScreen);
+        initScenes();
+        
+        initNavButtons(primaryStage);
 
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
- */
-        Scene scene = new Scene(root);
-        stage.setTitle("Tic Tac Toe");
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setTitle("Tic Tac Toe");
+        primaryStage.setScene(loginScene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+        
     }
 
     /**
@@ -45,6 +49,33 @@ public class TicTacToe extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void initScreens() {
+        loginScreen = new LoginScreen();
+        registerScreen = new RegisterScreen();
+    }
+
+    private void initScenes() {
+        loginScene = new Scene(loginScreen);
+        registerScene= new Scene(registerScreen);
+
+    }
+
+    private void initNavButtons(Stage currentStage) {
+        loginScreen.txt_signUp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+               currentStage.setScene(registerScene);
+            }
+        });
+        
+        registerScreen.txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+               currentStage.setScene(loginScene);
+            }
+        });
     }
     
 }
