@@ -18,8 +18,9 @@ public class OfflineGameBoardScreen extends AnchorPane {
     protected final ImageView win_condition;
     protected final ImageView imageView;
     protected final Text text_player_one;
-    protected final Button btn_back;
     protected final Text text_player_two;
+    public final ImageView btn_back;
+    public final ImageView btn_play_again;
     protected final GridPane gridPane;
     protected final ColumnConstraints columnConstraints;
     protected final ColumnConstraints columnConstraints0;
@@ -44,13 +45,16 @@ public class OfflineGameBoardScreen extends AnchorPane {
     protected int [][] gameBoardX;
     protected int [][] gameBoardO;
     protected boolean draw;
-
+    protected int playerOneScore;
+    protected int playerTwoScore;
+    
     public OfflineGameBoardScreen() {
 
         win_condition = new ImageView();
         imageView = new ImageView();
         text_player_one = new Text();
-        btn_back = new Button();
+        btn_back = new ImageView();
+        btn_play_again = new ImageView();
         text_player_two = new Text();
         gridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -76,6 +80,9 @@ public class OfflineGameBoardScreen extends AnchorPane {
         gameBoardO = new int [3][3];
         draw = false;
         
+        playerOneScore = 0;
+        playerTwoScore = 0;
+        
         currentTurn = 1;
 
         setMaxHeight(USE_PREF_SIZE);
@@ -93,18 +100,37 @@ public class OfflineGameBoardScreen extends AnchorPane {
         AnchorPane.setTopAnchor(text_player_one, 15.0);
         text_player_one.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text_player_one.setStrokeWidth(0.0);
-        text_player_one.setText("Player 1:  0");
+        text_player_one.setText("Player 1: " + playerOneScore);
+        text_player_one.setStyle("-fx-font-size: 20;");
 
-        AnchorPane.setBottomAnchor(btn_back, 15.0);
-        AnchorPane.setLeftAnchor(btn_back, 15.0);
-        btn_back.setMnemonicParsing(false);
-        btn_back.setText("Back");
+        AnchorPane.setBottomAnchor(btn_back, 20.0);
+        AnchorPane.setLeftAnchor(btn_back, 20.0);
+        btn_back.setFitHeight(50.0);
+        btn_back.setFitWidth(50.0);
+        btn_back.setLayoutX(25.0);
+        btn_back.setLayoutY(15.0);
+        btn_back.setPickOnBounds(true);
+        btn_back.setPreserveRatio(true);
+        btn_back.setImage(new Image(getClass().getResource("/images/back_button.png").toExternalForm()));
+        
+        AnchorPane.setBottomAnchor(btn_play_again, 20.0);
+        AnchorPane.setRightAnchor(btn_play_again, 20.0);
+        btn_play_again.setFitHeight(50.0);
+        btn_play_again.setFitWidth(50.0);
+        btn_play_again.setLayoutX(25.0);
+        btn_play_again.setLayoutY(15.0);
+        btn_play_again.setPickOnBounds(true);
+        btn_play_again.setPreserveRatio(true);
+        btn_play_again.setVisible(false);
+        btn_play_again.setDisable(true);
+        btn_play_again.setImage(new Image(getClass().getResource("/images/again_button.png").toExternalForm()));
 
         AnchorPane.setRightAnchor(text_player_two, 15.0);
         AnchorPane.setTopAnchor(text_player_two, 15.0);
         text_player_two.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text_player_two.setStrokeWidth(0.0);
-        text_player_two.setText("Player 2: 1");
+        text_player_two.setText("Player 2: " + playerTwoScore);
+        text_player_two.setStyle("-fx-font-size: 20;");
 
         gridPane.setLayoutX(100.0);
         gridPane.setMaxHeight(USE_PREF_SIZE);
@@ -248,9 +274,6 @@ public class OfflineGameBoardScreen extends AnchorPane {
         imageView3.setLayoutX(320.0);
         imageView3.setRotate(180.0);
         imageView3.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-        
-
-        
 
         getChildren().add(imageView);
         getChildren().add(text_player_one);
@@ -277,6 +300,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
         getChildren().add(imageView2);
         getChildren().add(imageView3);
         getChildren().add(win_condition);
+        getChildren().add(btn_play_again);
 
         board_0_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
@@ -340,6 +364,13 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 setXorO(board_2_2);
             }
         });
+        
+        btn_play_again.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                playAgain();
+            }
+        });
 
 
     }
@@ -384,12 +415,18 @@ public class OfflineGameBoardScreen extends AnchorPane {
         if(currentTurn % 2 != 0){
             System.out.println("X WON");
             drawWin(winCondition);
+            playerOneScore++;
+            text_player_one.setText("Player 1: " + playerOneScore);
         }else {
             System.out.println("O WON");
             drawWin(winCondition);
+            playerTwoScore++;
+            text_player_two.setText("Player 2: " + playerTwoScore);
         }
         draw = true;
         diableButtons();
+        btn_play_again.setVisible(true);
+        btn_play_again.setDisable(false);
     }
     
     public void drawWin(int winCondition){
@@ -462,5 +499,50 @@ public class OfflineGameBoardScreen extends AnchorPane {
         board_2_0.setDisable(true);
         board_2_1.setDisable(true);
         board_2_2.setDisable(true);
+    }
+    
+    public void enableButtons(){
+        board_0_0.setDisable(false);
+        board_1_0.setDisable(false);
+        board_0_1.setDisable(false);
+        board_0_2.setDisable(false);
+        board_1_1.setDisable(false);
+        board_1_2.setDisable(false);
+        board_2_0.setDisable(false);
+        board_2_1.setDisable(false);
+        board_2_2.setDisable(false);
+    }
+    
+    public void playAgain(){
+        gameBoardX = new int [3][3];
+        gameBoardO = new int [3][3];
+        draw = false;
+        
+        currentTurn = 1;
+        
+        clearBoard();
+        enableButtons();
+    }
+    public void clearBoard(){
+        board_0_0.setImage(null);
+        board_1_0.setImage(null);
+        board_0_1.setImage(null);
+        board_0_2.setImage(null);
+        board_1_1.setImage(null);
+        board_1_2.setImage(null);
+        board_2_0.setImage(null);
+        board_2_1.setImage(null);
+        board_2_2.setImage(null);
+        
+        win_condition.setImage(null);
+        
+        btn_play_again.setDisable(true);
+        btn_play_again.setVisible(false);
+    }
+    public void resetScores(){
+        playerOneScore = 0;
+        playerTwoScore = 0;
+        text_player_one.setText("Player 1: " + playerOneScore);
+        text_player_two.setText("Player 1: " + playerTwoScore);
     }
 }
