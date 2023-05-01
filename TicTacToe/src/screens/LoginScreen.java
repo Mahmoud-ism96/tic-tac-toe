@@ -1,14 +1,10 @@
 package screens;
 
-import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import static javafx.scene.paint.Color.BLUE;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -18,7 +14,7 @@ public  class LoginScreen extends AnchorPane {
     protected final ImageView icon_username;
     protected final ImageView icon_password;
     protected final ImageView icon_login;
-    protected final ImageView icon_back;
+    public final ImageView icon_back;
     public final Text txt_signUp;
     protected final TextField tv_username;
     protected final TextField tv_password;
@@ -48,7 +44,7 @@ public  class LoginScreen extends AnchorPane {
         img_password=new Image(getClass().getResourceAsStream("/images/password.png"));
         img_login=new Image(getClass().getResourceAsStream("/images/login.png"));
         img_background=new Image(getClass().getResourceAsStream("/images/background.png"));
-        img_back=new Image(getClass().getResourceAsStream("/images/back.png"));
+        img_back=new Image(getClass().getResourceAsStream("/images/back_button.png"));
 
         background.setImage(img_background);
         icon_username.setImage(img_user);
@@ -93,11 +89,11 @@ public  class LoginScreen extends AnchorPane {
         icon_login.setLayoutY(35.0);
         icon_login.setPickOnBounds(true);
         icon_login.setPreserveRatio(true);
-
-        icon_back.setFitHeight(30.0);
-        icon_back.setFitWidth(30.0);
-        icon_back.setLayoutX(14.0);
-        icon_back.setLayoutY(14.0);
+        
+        icon_back.setFitHeight(50.0);
+        icon_back.setFitWidth(50.0);
+        icon_back.setLayoutX(25.0);
+        icon_back.setLayoutY(15.0);
         icon_back.setPickOnBounds(true);
         icon_back.setPreserveRatio(true);
 
@@ -137,30 +133,6 @@ public  class LoginScreen extends AnchorPane {
         getChildren().add(tv_username);
         getChildren().add(tv_password);
         getChildren().add(btn_login);
-        
-        txt_signUp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                txt_signUp.setFill(BLUE);
-               
-              
-            }
-
-    });
-       icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION); 
-                alert.setHeaderText("Leave Game");
-                alert.setContentText("Are You Sure Want To Leave? ");
-                alert.showAndWait();
-            }
-
-    });
-
+       
     }
-
-   
-
 }

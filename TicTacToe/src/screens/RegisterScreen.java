@@ -25,14 +25,14 @@ public  class RegisterScreen extends AnchorPane {
     protected final ImageView icon_username;
     protected final ImageView icon_password;
     protected final ImageView icon_confirm_password;
-    protected final ImageView icon_back;
+    public ImageView icon_back;
     
     protected Image img_user;
     protected Image img_password;
     protected Image img_register;
     protected Image background;
-    protected  Image img_back;
-    protected  Image img_confirm_password;
+    protected Image img_back;
+    protected Image img_confirm_password;
 
     public RegisterScreen() {
 
@@ -53,7 +53,7 @@ public  class RegisterScreen extends AnchorPane {
         img_confirm_password = new Image(getClass().getResourceAsStream("/images/confirm.png"));
         img_register = new Image(getClass().getResourceAsStream("/images/register.png"));
         background = new Image(getClass().getResourceAsStream("/images/background.png"));
-        img_back = new Image(getClass().getResourceAsStream("/images/back.png"));
+        img_back = new Image(getClass().getResourceAsStream("/images/back_button.png"));
         
         img_background.setImage(background);
         icon_username.setImage(img_user);
@@ -135,10 +135,10 @@ public  class RegisterScreen extends AnchorPane {
         icon_confirm_password.setPickOnBounds(true);
         icon_confirm_password.setPreserveRatio(true);
 
-        icon_back.setFitHeight(30.0);
-        icon_back.setFitWidth(30.0);
-        icon_back.setLayoutX(14.0);
-        icon_back.setLayoutY(14.0);
+        icon_back.setFitHeight(50.0);
+        icon_back.setFitWidth(50.0);
+        icon_back.setLayoutX(25.0);
+        icon_back.setLayoutY(15.0);
         icon_back.setPickOnBounds(true);
         icon_back.setPreserveRatio(true);
 
@@ -153,26 +153,6 @@ public  class RegisterScreen extends AnchorPane {
         getChildren().add(icon_password);
         getChildren().add(icon_confirm_password);
         getChildren().add(icon_back);
-        
-        txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                txt_signIn.setFill(BLUE);
-                
-            }
-
-    });
-       icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION); 
-                alert.setHeaderText("Leave Game");
-                alert.setContentText("Are You Sure Want To Leave? ");
-                alert.showAndWait();
-            }
-
-    });
-
+       
     }
 }
