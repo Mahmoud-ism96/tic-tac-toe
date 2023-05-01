@@ -66,10 +66,11 @@ public class OfflineScreenBase extends AnchorPane {
         logoImage.setLayoutY(75.0);
         logoImage.setFitHeight(70.0);
         logoImage.setFitWidth(100.0);
+
         logoImage.setPickOnBounds(true);
         logoImage.setPreserveRatio(true);
         logoImage.setImage(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
-
+        
         text.setLayoutX(200.0);
         text.setLayoutY(125.0);
         text.setText("Tic Tac Toe");

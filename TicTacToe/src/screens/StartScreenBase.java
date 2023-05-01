@@ -15,7 +15,7 @@ public class StartScreenBase extends AnchorPane {
     public final Button playOfflineBtn;
     protected final ImageView logoImage;
     protected final Text text;
-
+    
     public StartScreenBase() {
         imageView = new ImageView();
         playOnlineBtn = new Button();
@@ -53,7 +53,7 @@ public class StartScreenBase extends AnchorPane {
         logoImage.setPickOnBounds(true);
         logoImage.setPreserveRatio(true);
         logoImage.setImage(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
-
+        
         text.setLayoutX(200.0);
         text.setLayoutY(125.0);
         text.setText("Tic Tac Toe");
