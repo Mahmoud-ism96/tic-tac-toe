@@ -5,6 +5,8 @@
  */
 package tictactoe;
 
+import screens.OfflineScreenBase;
+import screens.StartScreenBase;
 import screens.LoginScreen;
 import screens.RegisterScreen;
 import javafx.application.Application;
@@ -13,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import screens.GameBoardScreen;
 
 /**
  *
@@ -22,9 +25,16 @@ public class TicTacToe extends Application {
     
     LoginScreen loginScreen;
     RegisterScreen registerScreen;
+    GameBoardScreen gameBoardScreen;
+    StartScreenBase startScreen;
+   // OfflineScreenBase offlineScreen;
+    
     Scene loginScene;
     Scene registerScene;
-    
+    Scene gameBoardScene;
+    Scene startScene;
+    //Scene offlineScene;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         
@@ -35,7 +45,7 @@ public class TicTacToe extends Application {
         initNavButtons(primaryStage);
 
         primaryStage.setTitle("Tic Tac Toe");
-        primaryStage.setScene(loginScene);
+        primaryStage.setScene(startScene);
         primaryStage.setResizable(false);
         primaryStage.show();
         
@@ -51,11 +61,18 @@ public class TicTacToe extends Application {
     private void initScreens() {
         loginScreen = new LoginScreen();
         registerScreen = new RegisterScreen();
+        gameBoardScreen = new GameBoardScreen();
+        startScreen = new StartScreenBase();
+       // offlineScreen = new OfflineScreenBase();
+
     }
 
     private void initScenes() {
         loginScene = new Scene(loginScreen);
-        registerScene= new Scene(registerScreen);
+        registerScene = new Scene(registerScreen);
+        gameBoardScene = new Scene(gameBoardScreen);
+        startScene = new Scene(startScreen);
+       // offlineScene = new Scene(startScreen);
 
     }
 
