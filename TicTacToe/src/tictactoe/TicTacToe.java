@@ -12,8 +12,10 @@ import static javafx.application.Application.launch;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import screens.GameBoardScreen;
+import screens.ComputerGameBoardScreen;
+import screens.OfflineGameBoardScreen;
 
 /**
  *
@@ -23,10 +25,12 @@ public class TicTacToe extends Application {
     
     LoginScreen loginScreen;
     RegisterScreen registerScreen;
-    GameBoardScreen gameBoardScreen;
+    OfflineGameBoardScreen offlineGameBoardScreen;
+    ComputerGameBoardScreen computerGameBoardScreen;
     Scene loginScene;
     Scene registerScene;
-    Scene gameBoardScene;
+    Scene offlineGameBoardScene;
+    Scene computerGameBoardScene;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -36,9 +40,9 @@ public class TicTacToe extends Application {
         initScenes();
         
         initNavButtons(primaryStage);
-
+        
         primaryStage.setTitle("Tic Tac Toe");
-        primaryStage.setScene(gameBoardScene);
+        primaryStage.setScene(computerGameBoardScene);
         primaryStage.setResizable(false);
         primaryStage.show();
         
@@ -52,15 +56,24 @@ public class TicTacToe extends Application {
     }
 
     private void initScreens() {
+        Font.loadFont(TicTacToe.class.getResource("/assets/fonts/Stroke-082d.ttf").toExternalForm(), 10);
+        
         loginScreen = new LoginScreen();
         registerScreen = new RegisterScreen();
-        gameBoardScreen = new GameBoardScreen();
+        offlineGameBoardScreen = new OfflineGameBoardScreen();
+        computerGameBoardScreen = new ComputerGameBoardScreen();
+        
+        loginScreen.setStyle("-fx-font-family: Stroke;");
+        registerScreen.setStyle("-fx-font-family: Stroke;");
+        offlineGameBoardScreen.setStyle("-fx-font-family: Stroke;");
+        computerGameBoardScreen.setStyle("-fx-font-family: Stroke;");
     }
 
     private void initScenes() {
         loginScene = new Scene(loginScreen);
         registerScene = new Scene(registerScreen);
-        gameBoardScene = new Scene(gameBoardScreen);
+        offlineGameBoardScene = new Scene(offlineGameBoardScreen);
+        computerGameBoardScene = new Scene(computerGameBoardScreen);
     }
 
     private void initNavButtons(Stage currentStage) {
