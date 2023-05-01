@@ -52,7 +52,7 @@ public  class RegisterScreen extends AnchorPane {
         img_password = new Image(getClass().getResourceAsStream("/images/password.png"));
         img_confirm_password = new Image(getClass().getResourceAsStream("/images/confirm.png"));
         img_register = new Image(getClass().getResourceAsStream("/images/register.png"));
-        background = new Image(getClass().getResourceAsStream("/images/background.jpg"));
+        background = new Image(getClass().getResourceAsStream("/images/background.png"));
         img_back = new Image(getClass().getResourceAsStream("/images/back.png"));
         
         img_background.setImage(background);

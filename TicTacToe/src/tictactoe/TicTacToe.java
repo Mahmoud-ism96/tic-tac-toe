@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import screens.GameBoardScreen;
 
 /**
  *
@@ -22,8 +23,10 @@ public class TicTacToe extends Application {
     
     LoginScreen loginScreen;
     RegisterScreen registerScreen;
+    GameBoardScreen gameBoardScreen;
     Scene loginScene;
     Scene registerScene;
+    Scene gameBoardScene;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -35,7 +38,7 @@ public class TicTacToe extends Application {
         initNavButtons(primaryStage);
 
         primaryStage.setTitle("Tic Tac Toe");
-        primaryStage.setScene(loginScene);
+        primaryStage.setScene(gameBoardScene);
         primaryStage.setResizable(false);
         primaryStage.show();
         
@@ -51,12 +54,13 @@ public class TicTacToe extends Application {
     private void initScreens() {
         loginScreen = new LoginScreen();
         registerScreen = new RegisterScreen();
+        gameBoardScreen = new GameBoardScreen();
     }
 
     private void initScenes() {
         loginScene = new Scene(loginScreen);
-        registerScene= new Scene(registerScreen);
-
+        registerScene = new Scene(registerScreen);
+        gameBoardScene = new Scene(gameBoardScreen);
     }
 
     private void initNavButtons(Stage currentStage) {

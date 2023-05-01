@@ -44,10 +44,10 @@ public  class LoginScreen extends AnchorPane {
         btn_login = new Button();
         
         
-         img_user=new Image(getClass().getResourceAsStream("/images/user.png"));
+        img_user=new Image(getClass().getResourceAsStream("/images/user.png"));
         img_password=new Image(getClass().getResourceAsStream("/images/password.png"));
         img_login=new Image(getClass().getResourceAsStream("/images/login.png"));
-        img_background=new Image(getClass().getResourceAsStream("/images/background.jpg"));
+        img_background=new Image(getClass().getResourceAsStream("/images/background.png"));
         img_back=new Image(getClass().getResourceAsStream("/images/back.png"));
 
         background.setImage(img_background);
