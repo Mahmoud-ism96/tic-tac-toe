@@ -95,15 +95,14 @@ public  class RegisterScreen extends AnchorPane {
         tv_confirm_password.setPromptText("confirm password");
         tv_confirm_password.setStyle("-fx-border-color: BLACK;");
 
-        btn_register.setLayoutX(257.0);
-        btn_register.setLayoutY(315.0);
+        AnchorPane.setLeftAnchor(btn_register, 250.0);
+        AnchorPane.setRightAnchor(btn_register, 250.0);
+        btn_register.setLayoutY(310.0);
         btn_register.setMnemonicParsing(false);
-        btn_register.setPrefHeight(25.0);
-        btn_register.setPrefWidth(121.0);
-        btn_register.setStyle("-fx-background-color: BLACK; -fx-background-radius: 25;");
+        btn_register.getStyleClass().add("button");
+        btn_register.setStyle("-fx-font-size:12;");
         btn_register.setText("Register");
         btn_register.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        btn_register.setTextFill(javafx.scene.paint.Color.WHITE);
 
         txt_signIn.setLayoutX(272.0);
         txt_signIn.setLayoutY(362.0);

@@ -95,7 +95,9 @@ public class TicTacToe extends Application {
         offlineScene = new Scene(offlineScreen);
         offlineScene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
         loginScene = new Scene(loginScreen);
+        loginScene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
         registerScene = new Scene(registerScreen);
+        registerScene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
         offlineGameBoardScene = new Scene(offlineGameBoardScreen);
         computerGameBoardScene = new Scene(computerGameBoardScreen);
     }

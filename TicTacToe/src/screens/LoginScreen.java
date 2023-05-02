@@ -20,7 +20,6 @@ public  class LoginScreen extends AnchorPane {
     protected final TextField tv_password;
     protected final Button btn_login;
 
-    
     protected Image img_user;
     protected Image img_password;
     protected Image img_login;
@@ -38,7 +37,6 @@ public  class LoginScreen extends AnchorPane {
         tv_username = new TextField();
         tv_password = new TextField();
         btn_login = new Button();
-        
         
         img_user=new Image(getClass().getResourceAsStream("/images/user.png"));
         img_password=new Image(getClass().getResourceAsStream("/images/password.png"));
@@ -64,8 +62,7 @@ public  class LoginScreen extends AnchorPane {
         AnchorPane.setRightAnchor(background, 0.0);
         AnchorPane.setTopAnchor(background, 0.0);
         background.setFitHeight(400.0);
-        background.setFitWidth(607.0);
-        background.setLayoutX(-1.0);
+        background.setFitWidth(600.0);
         background.setPickOnBounds(true);
         background.setPreserveRatio(true);
 
@@ -114,15 +111,14 @@ public  class LoginScreen extends AnchorPane {
         tv_password.setPromptText("password");
         tv_password.setStyle("-fx-border-color: BLACK;");
 
-        btn_login.setLayoutX(263.0);
-        btn_login.setLayoutY(289.0);
+        
+        AnchorPane.setLeftAnchor(btn_login, 253.0);
+        AnchorPane.setRightAnchor(btn_login, 253.0);
+        btn_login.setLayoutY(280.0);
         btn_login.setMnemonicParsing(false);
-        btn_login.setPrefHeight(25.0);
-        btn_login.setPrefWidth(110.0);
-        btn_login.setStyle("-fx-background-color: BLACK; -fx-background-radius: 25;");
         btn_login.setText("Login");
-        btn_login.setTextFill(javafx.scene.paint.Color.WHITE);
-        btn_login.setFont(new Font("System Bold", 12.0));
+        btn_login.getStyleClass().add("button");
+        btn_login.setStyle("-fx-font-size:12;");
 
         getChildren().add(background);
         getChildren().add(icon_username);
