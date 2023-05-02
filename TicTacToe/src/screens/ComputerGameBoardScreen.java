@@ -23,7 +23,7 @@ import javafx.scene.text.Text;
  */
 public class ComputerGameBoardScreen extends AnchorPane {
     
-    protected final ImageView win_condition;
+    protected ImageView win_condition;
     protected final ImageView imageView;
     protected final Text text_player_one;
     public final ImageView btn_back;
@@ -87,7 +87,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
         imageView3 = new ImageView();
         gameBoardX = new int [3][3];
         gameBoardO = new int [3][3];
-        draw = false;
+        draw = true;
         noWinner = true;
         
         playerOneScore = 0;
@@ -139,7 +139,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
         AnchorPane.setTopAnchor(text_player_two, 15.0);
         text_player_two.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text_player_two.setStrokeWidth(0.0);
-        text_player_two.setText("Player 2: " + playerTwoScore);
+        text_player_two.setText("Computer: " + playerTwoScore);
         text_player_two.setStyle("-fx-font-size: 20;");
 
         gridPane.setLayoutX(100.0);
@@ -419,7 +419,12 @@ public class ComputerGameBoardScreen extends AnchorPane {
         else if(currentGameBoard[0][0] == 1 && currentGameBoard[1][0] == 1 && currentGameBoard[2][0] == 1){announceWinner(6); }
         else if(currentGameBoard[0][1] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][1] == 1){announceWinner(7); }
         else if(currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1){announceWinner(8); }
-        else if(currentTurn == 9 && draw == false ){System.out.println("DRAW");}
+        else if(currentTurn == 9 && draw == true ){
+            noWinner = true;
+            diableButtons();
+            btn_play_again.setVisible(true);
+            btn_play_again.setDisable(false);
+        }
     }
     public void announceWinner(int winCondition){
         if(currentTurn % 2 != 0){
@@ -431,9 +436,9 @@ public class ComputerGameBoardScreen extends AnchorPane {
             System.out.println("O WON");
             drawWin(winCondition);
             playerTwoScore++;
-            text_player_two.setText("Player 2: " + playerTwoScore);
+            text_player_two.setText("Computer: " + playerTwoScore);
         }
-        draw = true;
+        draw = false;
         noWinner = false;
         diableButtons();
         btn_play_again.setVisible(true);
@@ -448,6 +453,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setFitWidth(400.0);
                 win_condition.setLayoutX(100.0);
                 win_condition.setLayoutY(30.0);
+                win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
             }break;
             case 2: {
@@ -455,6 +461,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setFitWidth(400.0);
                 win_condition.setLayoutX(100.0);
                 win_condition.setLayoutY(150.0);
+                win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
             }break;
             case 3: {
@@ -462,6 +469,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setFitWidth(400.0);
                 win_condition.setLayoutX(100.0);
                 win_condition.setLayoutY(280.0);
+                win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
             }break;
             case 4: {
@@ -484,18 +492,24 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
                 win_condition.setLayoutX(130.0);
+                win_condition.setLayoutY(0);
+                win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
             }break;
             case 7: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
                 win_condition.setLayoutX(245.0);
+                win_condition.setLayoutY(0);
+                win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
             }break;
             case 8: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
                 win_condition.setLayoutX(370.0);
+                win_condition.setLayoutY(0);
+                win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
             }break;
         }
@@ -564,7 +578,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
         board_2_2.setDisable(true);
     }
     
-        public void enableButtons(){
+    public void enableButtons(){
         board_0_0.setDisable(false);
         board_1_0.setDisable(false);
         board_0_1.setDisable(false);
@@ -579,7 +593,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
     public void playAgain(){
         gameBoardX = new int [3][3];
         gameBoardO = new int [3][3];
-        draw = false;
+        draw = true;
         noWinner = true;
         
         currentTurn = 1;
@@ -608,6 +622,6 @@ public class ComputerGameBoardScreen extends AnchorPane {
         playerTwoScore = 0;
         
         text_player_one.setText("Player 1: " + playerOneScore);
-        text_player_two.setText("Player 1: " + playerTwoScore);
+        text_player_two.setText("Computer: " + playerTwoScore);
     }
 }
