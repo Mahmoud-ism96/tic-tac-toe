@@ -1,9 +1,15 @@
 package screens;
 
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -420,11 +426,17 @@ public class OfflineGameBoardScreen extends AnchorPane {
             drawWin(winCondition);
             playerOneScore++;
             text_player_one.setText("Player 1: " + playerOneScore);
+            
+            showDialog("Congratulation Player 1 Won");
+            
         }else {
             System.out.println("O WON");
             drawWin(winCondition);
             playerTwoScore++;
             text_player_two.setText("Player 2: " + playerTwoScore);
+            
+           showDialog("Congratulation Player 2 Won");
+            
         }
         draw = true;
         diableButtons();
@@ -556,5 +568,30 @@ public class OfflineGameBoardScreen extends AnchorPane {
         playerTwoScore = 0;
         text_player_one.setText("Player 1: " + playerOneScore);
         text_player_two.setText("Player 2: " + playerTwoScore);
+    }
+    
+    public void showDialog(String msg){
+    
+            Dialog dialog = new Dialog();
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.setStyle("-fx-background-color: #fff;");
+            dialog.setContentText(msg);
+            dialog.setTitle("Congratulation");
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+          
+            dialog.getDialogPane().getButtonTypes().addAll(okButton);
+
+       
+            Button okButtonStyle = (Button) dialog.getDialogPane().lookupButton(okButton);
+            okButtonStyle.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+            okButtonStyle.setAlignment(Pos.CENTER);
+   
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.get() == okButton){
+            }else {
+   
+            }
+   
     }
 }
