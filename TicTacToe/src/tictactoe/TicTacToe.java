@@ -6,21 +6,15 @@
 package tictactoe;
 
 import java.util.Optional;
-import screens.OfflineScreenBase;
-import screens.StartScreenBase;
 import screens.LoginScreen;
 import screens.RegisterScreen;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -32,13 +26,12 @@ import screens.OfflineGameBoardScreen;
 import screens.OfflineScreenBase;
 import screens.StartScreenBase;
 
-
 /**
  *
  * @author Mahmoud Ism
  */
 public class TicTacToe extends Application {
-    
+
     StartScreenBase startScreen;
     OfflineScreenBase offlineScreen;
     LoginScreen loginScreen;
@@ -51,22 +44,24 @@ public class TicTacToe extends Application {
     Scene registerScene;
     Scene offlineGameBoardScene;
     Scene computerGameBoardScene;
-    
-    
+    Dialog warningDialog;
+    ButtonType yesButton;
+    Optional<ButtonType> result;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
+
         initScreens();
-        
+
         initScenes();
-        
+
         initNavButtons(primaryStage);
-        
+
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(startScene);
         primaryStage.setResizable(false);
         primaryStage.show();
-        
+
     }
 
     /**
@@ -78,14 +73,14 @@ public class TicTacToe extends Application {
 
     private void initScreens() {
         Font.loadFont(TicTacToe.class.getResource("/assets/fonts/Stroke-082d.ttf").toExternalForm(), 10);
-        
+
         startScreen = new StartScreenBase();
         offlineScreen = new OfflineScreenBase();
         loginScreen = new LoginScreen();
         registerScreen = new RegisterScreen();
         offlineGameBoardScreen = new OfflineGameBoardScreen();
         computerGameBoardScreen = new ComputerGameBoardScreen();
-        
+
         startScreen.setStyle("-fx-font-family: Stroke;");
         offlineScreen.setStyle("-fx-font-family: Stroke;");
         loginScreen.setStyle("-fx-font-family: Stroke;");
@@ -106,135 +101,115 @@ public class TicTacToe extends Application {
     }
 
     private void initNavButtons(Stage currentStage) {
-        
-        startScreen.playOfflineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               currentStage.setScene(offlineScene);
-            }
-        });
-        
-        startScreen.playOnlineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               currentStage.setScene(loginScene);
-            }
-        });
-        
-        offlineScreen.playLocallyBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               currentStage.setScene(offlineGameBoardScene);
-            }
-        });
-        
-        offlineScreen.play_with_pc.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               currentStage.setScene(computerGameBoardScene);
-            }
-        });
-        
-        offlineScreen.backImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               currentStage.setScene(startScene);
-            }
-        });
-        
-        loginScreen.txt_signUp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               currentStage.setScene(registerScene);
-            }
-        });
-        
-        loginScreen.icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                currentStage.setScene(startScene);
-            }
-        });
-        
-        registerScreen.txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-               currentStage.setScene(loginScene);
-            }
-        });
-        registerScreen.icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                currentStage.setScene(startScene);
-            }
-        });
-        
-        offlineGameBoardScreen.btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-            Dialog dialog = new Dialog();
-            DialogPane dialogPane = dialog.getDialogPane();
-            dialogPane.setStyle("-fx-background-color: #fff;");
-            dialog.setContentText("sure? you want to leave?");
-            dialog.setTitle("Confirmation");
 
-            ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-            ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-            dialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
-            dialogPane.lookupButton(cancelButton).setVisible(true);
-
-       
-            Button okButton = (Button) dialog.getDialogPane().lookupButton(yesButton);
-            okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
-            okButton.setAlignment(Pos.CENTER);
-   
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.get() == yesButton){
-            currentStage.setScene(offlineScene);
-            offlineGameBoardScreen.resetScores();
-            offlineGameBoardScreen.playAgain();
-             } else {
-                       
-             }
-          
-        }
-        });
-        computerGameBoardScreen.btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+        startScreen.playOfflineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-            Dialog dialog = new Dialog();
-            DialogPane dialogPane = dialog.getDialogPane();
-            dialogPane.setStyle("-fx-background-color: #fff;");
-            dialog.setContentText("sure? you want to leave?");
-            dialog.setTitle("Confirmation");
-           
-
-            ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-            ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-            dialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
-            dialogPane.lookupButton(cancelButton).setVisible(true);
-
-       
-            Button okButton = (Button) dialog.getDialogPane().lookupButton(yesButton);
-            okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
-            okButton.setAlignment(Pos.CENTER);
-   
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.get() == yesButton){
                 currentStage.setScene(offlineScene);
-                computerGameBoardScreen.resetScores();
-                computerGameBoardScreen.playAgain();
-            }else
-            {
-                
-            }}
+            }
         });
-        
-        
+
+        startScreen.playOnlineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(loginScene);
+            }
+        });
+
+        offlineScreen.playLocallyBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(offlineGameBoardScene);
+            }
+        });
+
+        offlineScreen.play_with_pc.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(computerGameBoardScene);
+            }
+        });
+
+        offlineScreen.backImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(startScene);
+            }
+        });
+
+        loginScreen.txt_signUp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(registerScene);
+            }
+        });
+
+        loginScreen.icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(startScene);
+            }
+        });
+
+        registerScreen.txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(loginScene);
+            }
+        });
+        registerScreen.icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                currentStage.setScene(startScene);
+            }
+        });
+
+        offlineGameBoardScreen.btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                leavingAlert();
+                if (result.get() == yesButton) {
+                    currentStage.setScene(offlineScene);
+                    offlineGameBoardScreen.resetScores();
+                    offlineGameBoardScreen.playAgain();
+                }
+            }
+        });
+        computerGameBoardScreen.btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                leavingAlert();
+                if (result.get() == yesButton) {
+                    currentStage.setScene(offlineScene);
+                    computerGameBoardScreen.resetScores();
+                    computerGameBoardScreen.playAgain();
+                }
+            }
+        });
+
     }
-    public void showAlert(){
-    
-    
-        }
-    
+
+    public void leavingAlert() {
+
+        Dialog warningDialog = new Dialog();
+        DialogPane dialogPane = warningDialog.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #fff;");
+        warningDialog.setContentText("Are you sure want to leave?");
+        warningDialog.setTitle("Confirmation");
+
+        yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        warningDialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
+        dialogPane.lookupButton(cancelButton).setVisible(true);
+
+        Button okButton = (Button) warningDialog.getDialogPane().lookupButton(yesButton);
+        okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+        okButton.setAlignment(Pos.CENTER);
+
+        result = warningDialog.showAndWait();
+
+    }
+
 }
