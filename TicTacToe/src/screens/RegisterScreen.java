@@ -1,15 +1,19 @@
 package screens;
 
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import static javafx.scene.paint.Color.BLUE;
 import javafx.scene.text.Text;
 
@@ -153,6 +157,49 @@ public  class RegisterScreen extends AnchorPane {
         getChildren().add(icon_password);
         getChildren().add(icon_confirm_password);
         getChildren().add(icon_back);
-       
+        
+        
+        
+    btn_register.setOnAction(new EventHandler<ActionEvent>() {
+    @Override
+    public void handle(ActionEvent event) {
+        validation();
+    }     
+}); 
+    
+    }
+   
+    public void validation()
+    {
+        
+      String name = tv_username.getText();
+      String password = tv_password.getText();
+      String confirmPassword = tv_confirm_password.getText();
+      
+      if (name.length() < 6 && name.isEmpty() ) {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Username should be at least 6 characters long");
+      alert.showAndWait();
+   
+     }else if(!password.matches(".*[a-zA-Z].*") || !password.matches(".*\\d.*")){
+      System.out.println("Password should contain both letters and numbers");
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Password should contain both letters and numbers");
+      alert.showAndWait();
+     }else if(!password.equals(confirmPassword))
+     {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Password and confirmation password do not match");
+      alert.showAndWait();
+     }
+     else{
+  
+     }
     }
 }
