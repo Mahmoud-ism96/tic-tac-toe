@@ -4,23 +4,18 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="playOnlineBtn" layoutX="216.0" layoutY="166.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="168.0" styleClass="OnlineButtons" stylesheets="@../css.css" text="Play Online" textAlignment="CENTER" AnchorPane.leftAnchor="216.0" AnchorPane.rightAnchor="216.0">
-      </Button>
-      <Button fx:id="playOfflineBtn" layoutX="216.0" layoutY="238.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="168.0" styleClass="OnlineButtons" stylesheets="@../css.css" text="Play Offline" AnchorPane.leftAnchor="216.0" AnchorPane.rightAnchor="216.0">
-      </Button>
-      <ImageView fx:id="logoImage" fitHeight="61.0" fitWidth="93.0" layoutX="161.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="161.0" AnchorPane.rightAnchor="378.0" AnchorPane.topAnchor="64.0">
+      <Button fx:id="playOnlineBtn" layoutX="226.0" layoutY="176.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="168.0" styleClass="OnlineButtons" stylesheets="@../css.css" text="Play Online" textAlignment="CENTER" />
+      <Button fx:id="playOfflineBtn" layoutX="226.0" layoutY="248.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="168.0" styleClass="OnlineButtons" stylesheets="@../css.css" text="Play Offline" />
+      <ImageView fx:id="logoImage" fitHeight="61.0" fitWidth="93.0" layoutX="171.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@/images/logo.png" />
          </image>
       </ImageView>
-      <Text fx:id="text" layoutX="246.0" layoutY="106.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Tic Tac Toe">
-      </Text>
+      <Text fx:id="text" layoutX="256.0" layoutY="116.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Tic Tac Toe" />
    </children>
 </AnchorPane>

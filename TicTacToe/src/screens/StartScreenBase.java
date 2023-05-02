@@ -28,7 +28,7 @@ public class StartScreenBase extends AnchorPane {
         imageView.setImage(new Image(getClass().getResource("/images/background.png").toExternalForm()));
         setId("AnchorPane");
         setPrefHeight(400.0);
-        setPrefWidth(600.0);
+        setPrefWidth(600.0);        
 
         AnchorPane.setLeftAnchor(playOnlineBtn, 220.0);
         AnchorPane.setRightAnchor(playOnlineBtn, 220.0);
