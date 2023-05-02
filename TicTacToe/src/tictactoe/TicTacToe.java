@@ -5,6 +5,7 @@
  */
 package tictactoe;
 
+import java.util.Optional;
 import screens.OfflineScreenBase;
 import screens.StartScreenBase;
 import screens.LoginScreen;
@@ -12,7 +13,17 @@ import screens.RegisterScreen;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -161,19 +172,69 @@ public class TicTacToe extends Application {
         offlineGameBoardScreen.btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-                currentStage.setScene(offlineScene);
-                offlineGameBoardScreen.resetScores();
-                offlineGameBoardScreen.playAgain();
-            }
+            Dialog dialog = new Dialog();
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.setStyle("-fx-background-color: #fff;");
+            dialog.setContentText("sure? you want to leave?");
+            dialog.setTitle("Confirmation");
+
+            ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+            dialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
+            dialogPane.lookupButton(cancelButton).setVisible(true);
+
+       
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(yesButton);
+            okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+            okButton.setAlignment(Pos.CENTER);
+   
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.get() == yesButton){
+            currentStage.setScene(offlineScene);
+            offlineGameBoardScreen.resetScores();
+            offlineGameBoardScreen.playAgain();
+             } else {
+                       
+             }
+          
+        }
         });
         computerGameBoardScreen.btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
+            Dialog dialog = new Dialog();
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.setStyle("-fx-background-color: #fff;");
+            dialog.setContentText("sure? you want to leave?");
+            dialog.setTitle("Confirmation");
+           
+
+            ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+            dialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
+            dialogPane.lookupButton(cancelButton).setVisible(true);
+
+       
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(yesButton);
+            okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+            okButton.setAlignment(Pos.CENTER);
+   
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.get() == yesButton){
                 currentStage.setScene(offlineScene);
                 computerGameBoardScreen.resetScores();
                 computerGameBoardScreen.playAgain();
-            }
+            }else
+            {
+                
+            }}
         });
+        
+        
     }
+    public void showAlert(){
+    
+    
+        }
     
 }
