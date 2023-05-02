@@ -19,10 +19,10 @@ import javafx.stage.StageStyle;
  *
  * @author HP
  */
-public class DisplayingVidoe {
-        public static void displayVideo(String path){
+public class DisplayingVideo {
+        public void displayVideo(String path){
      
-            Media media = new Media(new File(path).toURI().toString());
+            Media media = new Media(getClass().getResource(path).toExternalForm());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             MediaView mediaView = new MediaView(mediaPlayer);
 

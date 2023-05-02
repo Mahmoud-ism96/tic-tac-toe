@@ -4,17 +4,14 @@
  * and open the template in the editor.
  */
 package screens;
-import java.io.File;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
@@ -59,6 +56,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
     protected boolean noWinner;
     protected int playerOneScore;
     protected int playerTwoScore;
+    protected final DisplayingVideo displayingVideo;
    
     public ComputerGameBoardScreen(){
 
@@ -90,6 +88,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
         imageView3 = new ImageView();
         gameBoardX = new int [3][3];
         gameBoardO = new int [3][3];
+        displayingVideo = new DisplayingVideo();
         draw = true;
         noWinner = true;
         
@@ -435,14 +434,14 @@ public class ComputerGameBoardScreen extends AnchorPane {
             drawWin(winCondition);
             playerOneScore++;
             text_player_one.setText("Player 1: " + playerOneScore);
-             DisplayingVidoe.displayVideo("C:\\Users\\HP\\Documents\\NetBeansProjects\\tic-tac-toe\\TicTacToe\\src\\Videos\\Winning.mp4");
+            displayingVideo.displayVideo("/assets/videos/Winning.mp4");
            
         }else {
             System.out.println("O WON");
             drawWin(winCondition);
             playerTwoScore++;
             text_player_two.setText("Computer: " + playerTwoScore);
-             DisplayingVidoe.displayVideo("C:\\Users\\HP\\Documents\\NetBeansProjects\\tic-tac-toe\\TicTacToe\\src\\Videos\\Losing.mp4");
+            displayingVideo.displayVideo("/assets/videos/Losing.mp4");
         }
         draw = false;
         noWinner = false;
