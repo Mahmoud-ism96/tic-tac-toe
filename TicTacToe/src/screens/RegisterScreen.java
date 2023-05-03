@@ -84,17 +84,21 @@ public class RegisterScreen extends AnchorPane {
         img_background.setFitWidth(600.0);
         img_background.setPickOnBounds(true);
         img_background.setPreserveRatio(true);
-
-        tv_username.setLayoutX(245.0);
+        
+        AnchorPane.setLeftAnchor(tv_username, 230.0);
+        AnchorPane.setRightAnchor(tv_username, 230.0);
         tv_username.setLayoutY(151.0);
         tv_username.setPromptText("username");
         tv_username.setStyle("-fx-border-color: BLACK;");
 
-        tv_password.setLayoutX(245.0);
+        AnchorPane.setLeftAnchor(tv_password, 230.0);
+        AnchorPane.setRightAnchor(tv_password, 230.0);
         tv_password.setLayoutY(207.0);
         tv_password.setPromptText("password");
         tv_password.setStyle("-fx-border-color: BLACK;");
 
+        AnchorPane.setLeftAnchor(tv_confirm_password, 230.0);
+        AnchorPane.setRightAnchor(tv_confirm_password, 230.0);
         tv_confirm_password.setLayoutX(245.0);
         tv_confirm_password.setLayoutY(261.0);
         tv_confirm_password.setPromptText("confirm password");
@@ -109,19 +113,23 @@ public class RegisterScreen extends AnchorPane {
         btn_register.setText("Register");
         btn_register.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
-        txt_signIn.setLayoutX(272.0);
+        AnchorPane.setLeftAnchor(txt_signIn, 250.0);
+        AnchorPane.setRightAnchor(txt_signIn, 250.0);
         txt_signIn.setLayoutY(362.0);
         txt_signIn.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         txt_signIn.setStrokeWidth(0.0);
         txt_signIn.setText("Have An Account?");
 
+        AnchorPane.setLeftAnchor(icon_register, 250.0);
+        AnchorPane.setRightAnchor(icon_register, 250.0);
         icon_register.setFitHeight(100.0);
         icon_register.setFitWidth(100.0);
-        icon_register.setLayoutX(263.0);
         icon_register.setLayoutY(14.0);
         icon_register.setPickOnBounds(true);
         icon_register.setPreserveRatio(true);
 
+        AnchorPane.setLeftAnchor(icon_username, 200.0);
+        AnchorPane.setRightAnchor(icon_username, 200.0);
         icon_username.setFitHeight(30.0);
         icon_username.setFitWidth(30.0);
         icon_username.setLayoutX(204.0);
@@ -129,6 +137,8 @@ public class RegisterScreen extends AnchorPane {
         icon_username.setPickOnBounds(true);
         icon_username.setPreserveRatio(true);
 
+        AnchorPane.setLeftAnchor(icon_password, 200.0);
+        AnchorPane.setRightAnchor(icon_password, 200.0);
         icon_password.setFitHeight(30.0);
         icon_password.setFitWidth(30.0);
         icon_password.setLayoutX(204.0);
@@ -136,6 +146,8 @@ public class RegisterScreen extends AnchorPane {
         icon_password.setPickOnBounds(true);
         icon_password.setPreserveRatio(true);
 
+        AnchorPane.setLeftAnchor(icon_confirm_password, 197.0);
+        AnchorPane.setRightAnchor(icon_confirm_password, 197.0);
         icon_confirm_password.setFitHeight(30.0);
         icon_confirm_password.setFitWidth(30.0);
         icon_confirm_password.setLayoutX(204.0);

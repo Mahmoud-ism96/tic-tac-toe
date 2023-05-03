@@ -75,23 +75,26 @@ public class LoginScreen extends AnchorPane {
         background.setPickOnBounds(true);
         background.setPreserveRatio(true);
 
+        AnchorPane.setLeftAnchor(icon_username, 200.0);
+        AnchorPane.setRightAnchor(icon_username, 200.0);
         icon_username.setFitHeight(30.0);
         icon_username.setFitWidth(30.0);
-        icon_username.setLayoutX(203.0);
         icon_username.setLayoutY(176.0);
         icon_username.setPickOnBounds(true);
         icon_username.setPreserveRatio(true);
 
+        AnchorPane.setLeftAnchor(icon_password, 200.0);
+        AnchorPane.setRightAnchor(icon_password, 200.0);
         icon_password.setFitHeight(30.0);
         icon_password.setFitWidth(30.0);
-        icon_password.setLayoutX(203.0);
         icon_password.setLayoutY(230.0);
         icon_password.setPickOnBounds(true);
         icon_password.setPreserveRatio(true);
 
+        AnchorPane.setLeftAnchor(icon_login, 250.0);
+        AnchorPane.setRightAnchor(icon_login, 250.0);
         icon_login.setFitHeight(100.0);
         icon_login.setFitWidth(100.0);
-        icon_login.setLayoutX(268.0);
         icon_login.setLayoutY(35.0);
         icon_login.setPickOnBounds(true);
         icon_login.setPreserveRatio(true);
@@ -103,19 +106,22 @@ public class LoginScreen extends AnchorPane {
         icon_back.setPickOnBounds(true);
         icon_back.setPreserveRatio(true);
 
-        txt_signUp.setLayoutX(225.0);
+        AnchorPane.setLeftAnchor(txt_signUp, 200.0);
+        AnchorPane.setRightAnchor(txt_signUp, 200.0);
         txt_signUp.setLayoutY(344.0);
         txt_signUp.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         txt_signUp.setStrokeWidth(0.0);
         txt_signUp.setText("Donot have Account? Register here");
         txt_signUp.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
-        tv_username.setLayoutX(243.0);
+        AnchorPane.setLeftAnchor(tv_username, 230.0);
+        AnchorPane.setRightAnchor(tv_username, 230.0);
         tv_username.setLayoutY(178.0);
         tv_username.setPromptText("username");
         tv_username.setStyle("-fx-border-color: BLACK;");
 
-        tv_password.setLayoutX(243.0);
+        AnchorPane.setLeftAnchor(tv_password, 230.0);
+        AnchorPane.setRightAnchor(tv_password, 230.0);
         tv_password.setLayoutY(232.0);
         tv_password.setPromptText("password");
         tv_password.setStyle("-fx-border-color: BLACK;");
