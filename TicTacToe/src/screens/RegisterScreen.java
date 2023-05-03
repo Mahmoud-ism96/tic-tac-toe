@@ -1,8 +1,9 @@
 package screens;
 
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -16,8 +17,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import static javafx.scene.paint.Color.BLUE;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-public  class RegisterScreen extends AnchorPane {
+public class RegisterScreen extends AnchorPane {
 
     protected final ImageView img_background;
     protected final TextField tv_username;
@@ -30,7 +32,7 @@ public  class RegisterScreen extends AnchorPane {
     protected final ImageView icon_password;
     protected final ImageView icon_confirm_password;
     public ImageView icon_back;
-    
+
     protected Image img_user;
     protected Image img_password;
     protected Image img_register;
@@ -38,7 +40,11 @@ public  class RegisterScreen extends AnchorPane {
     protected Image img_back;
     protected Image img_confirm_password;
 
-    public RegisterScreen() {
+    protected Stage currentStage;
+
+    public RegisterScreen(Stage primaryStage) {
+
+        currentStage = primaryStage;
 
         img_background = new ImageView();
         tv_username = new TextField();
@@ -51,21 +57,20 @@ public  class RegisterScreen extends AnchorPane {
         icon_password = new ImageView();
         icon_confirm_password = new ImageView();
         icon_back = new ImageView();
-        
+
         img_user = new Image(getClass().getResourceAsStream("/images/user.png"));
         img_password = new Image(getClass().getResourceAsStream("/images/password.png"));
         img_confirm_password = new Image(getClass().getResourceAsStream("/images/confirm.png"));
         img_register = new Image(getClass().getResourceAsStream("/images/register.png"));
         background = new Image(getClass().getResourceAsStream("/images/background.png"));
         img_back = new Image(getClass().getResourceAsStream("/images/back_button.png"));
-        
+
         img_background.setImage(background);
         icon_username.setImage(img_user);
         icon_password.setImage(img_password);
         icon_register.setImage(img_register);
         icon_back.setImage(img_back);
         icon_confirm_password.setImage(img_confirm_password);
-        
 
         setId("AnchorPane");
         setPrefHeight(400.0);
@@ -99,15 +104,14 @@ public  class RegisterScreen extends AnchorPane {
         tv_confirm_password.setPromptText("confirm password");
         tv_confirm_password.setStyle("-fx-border-color: BLACK;");
 
-        btn_register.setLayoutX(257.0);
-        btn_register.setLayoutY(315.0);
+        AnchorPane.setLeftAnchor(btn_register, 250.0);
+        AnchorPane.setRightAnchor(btn_register, 250.0);
+        btn_register.setLayoutY(310.0);
         btn_register.setMnemonicParsing(false);
-        btn_register.setPrefHeight(25.0);
-        btn_register.setPrefWidth(121.0);
-        btn_register.setStyle("-fx-background-color: BLACK; -fx-background-radius: 25;");
+        btn_register.getStyleClass().add("button");
+        btn_register.setStyle("-fx-font-size:12;");
         btn_register.setText("Register");
         btn_register.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        btn_register.setTextFill(javafx.scene.paint.Color.WHITE);
 
         AnchorPane.setLeftAnchor(txt_signIn, 250.0);
         AnchorPane.setRightAnchor(txt_signIn, 250.0);
@@ -169,49 +173,70 @@ public  class RegisterScreen extends AnchorPane {
         getChildren().add(icon_password);
         getChildren().add(icon_confirm_password);
         getChildren().add(icon_back);
-        
-        
-        
-    btn_register.setOnAction(new EventHandler<ActionEvent>() {
-    @Override
-    public void handle(ActionEvent event) {
-        validation();
-    }     
-}); 
-    
+
+        initButtonActions();
+
     }
-   
-    public void validation()
-    {
-        
-      String name = tv_username.getText();
-      String password = tv_password.getText();
-      String confirmPassword = tv_confirm_password.getText();
-      
-      if (name.length() < 6 && name.isEmpty() ) {
-      Alert alert = new Alert(AlertType.ERROR);
-      alert.setTitle("Error");
-      alert.setHeaderText(null);
-      alert.setContentText("Username should be at least 6 characters long");
-      alert.showAndWait();
-   
-     }else if(!password.matches(".*[a-zA-Z].*") || !password.matches(".*\\d.*")){
-      System.out.println("Password should contain both letters and numbers");
-      Alert alert = new Alert(AlertType.ERROR);
-      alert.setTitle("Error");
-      alert.setHeaderText(null);
-      alert.setContentText("Password should contain both letters and numbers");
-      alert.showAndWait();
-     }else if(!password.equals(confirmPassword))
-     {
-      Alert alert = new Alert(AlertType.ERROR);
-      alert.setTitle("Error");
-      alert.setHeaderText(null);
-      alert.setContentText("Password and confirmation password do not match");
-      alert.showAndWait();
-     }
-     else{
-  
-     }
+
+    public void initButtonActions() {
+        btn_register.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                validation();
+            }
+        });
+
+        txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                LoginScreen loginScreen = new LoginScreen(currentStage);
+                navigate(loginScreen);
+            }
+        });
+        icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                StartScreenBase startScreen = new StartScreenBase(currentStage);
+                navigate(startScreen);
+            }
+        });
+    }
+
+    public void navigate(Parent screen) {
+        screen.setStyle("-fx-font-family: Stroke;");
+        Scene scene = new Scene(screen);
+        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
+        currentStage.setScene(scene);
+    }
+
+    public void validation() {
+
+        String name = tv_username.getText();
+        String password = tv_password.getText();
+        String confirmPassword = tv_confirm_password.getText();
+
+        if (name.length() < 6 && name.isEmpty()) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Username should be at least 6 characters long");
+            alert.showAndWait();
+
+        } else if (!password.matches(".*[a-zA-Z].*") || !password.matches(".*\\d.*")) {
+            System.out.println("Password should contain both letters and numbers");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Password should contain both letters and numbers");
+            alert.showAndWait();
+        } else if (!password.equals(confirmPassword)) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Password and confirmation password do not match");
+            alert.showAndWait();
+        } else {
+
+        }
     }
 }
