@@ -465,6 +465,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
         } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1) {
             announceWinner(8);
         } else if (currentTurn == 9 && isDraw == true) {
+            showDialog("DRAW");
             diableButtons();
             btn_play_again.setVisible(true);
             btn_play_again.setDisable(false);
