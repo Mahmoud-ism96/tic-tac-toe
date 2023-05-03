@@ -317,7 +317,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
         getChildren().add(imageView3);
         getChildren().add(win_condition);
         getChildren().add(btn_play_again);
-        
+
         initButtonActions();
     }
 
@@ -396,13 +396,14 @@ public class OfflineGameBoardScreen extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
 
-                leavingAlert();
-
-                if (result.get() == yesButton) {
-                    OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
+                OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
+                if (currentTurn > 1) {
+                    leavingAlert();
+                    if (result.get() == yesButton) {
+                        navigate(offlineScreen);
+                    }
+                } else {
                     navigate(offlineScreen);
-                    resetScores();
-                    playAgain();
                 }
             }
         });

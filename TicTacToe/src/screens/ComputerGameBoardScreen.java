@@ -410,13 +410,14 @@ public class ComputerGameBoardScreen extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
 
-                leavingAlert();
-
-                if (result.get() == yesButton) {
-                    OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
+                OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
+                if (currentTurn > 1) {
+                    leavingAlert();
+                    if (result.get() == yesButton) {
+                        navigate(offlineScreen);
+                    }
+                }else{
                     navigate(offlineScreen);
-                    resetScores();
-                    playAgain();
                 }
             }
         });
