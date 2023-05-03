@@ -62,7 +62,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
     protected int currentTurn;
     protected int[][] gameBoardX;
     protected int[][] gameBoardO;
-    protected boolean draw;
+    protected boolean isDraw;
     protected boolean noWinner;
     protected int playerOneScore;
     protected int playerTwoScore;
@@ -106,7 +106,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
         gameBoardX = new int[3][3];
         gameBoardO = new int[3][3];
         displayingVideo = new DisplayingVideo();
-        draw = true;
+        isDraw = true;
         noWinner = true;
 
         playerOneScore = 0;
@@ -450,7 +450,6 @@ public class ComputerGameBoardScreen extends AnchorPane {
         if (noWinner) {
             computerLogic();
         }
-
     }
 
     public void checkWinCondition(int currentGameBoard[][]) {
@@ -471,7 +470,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
             announceWinner(7);
         } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1) {
             announceWinner(8);
-        } else if (currentTurn == 9 && draw == true) {
+        } else if (currentTurn == 9 && isDraw == true) {
             noWinner = true;
             diableButtons();
             btn_play_again.setVisible(true);
@@ -494,7 +493,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
             text_player_two.setText("Computer: " + playerTwoScore);
             displayingVideo.displayVideo("/assets/videos/Losing.mp4");
         }
-        draw = false;
+        isDraw = false;
         noWinner = false;
         diableButtons();
         btn_play_again.setVisible(true);
@@ -649,7 +648,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
     public void playAgain() {
         gameBoardX = new int[3][3];
         gameBoardO = new int[3][3];
-        draw = true;
+        isDraw = true;
         noWinner = true;
 
         currentTurn = 1;

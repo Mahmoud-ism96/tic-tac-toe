@@ -53,7 +53,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
     protected int currentTurn;
     protected int[][] gameBoardX;
     protected int[][] gameBoardO;
-    protected boolean draw;
+    protected boolean isDraw;
     protected int playerOneScore;
     protected int playerTwoScore;
     protected Stage currentStage;
@@ -94,7 +94,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
         imageView3 = new ImageView();
         gameBoardX = new int[3][3];
         gameBoardO = new int[3][3];
-        draw = false;
+        isDraw = true;
 
         playerOneScore = 0;
         playerTwoScore = 0;
@@ -463,7 +463,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
             announceWinner(7);
         } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1) {
             announceWinner(8);
-        } else if (currentTurn == 9 && draw == false) {
+        } else if (currentTurn == 9 && isDraw == true) {
             diableButtons();
             btn_play_again.setVisible(true);
             btn_play_again.setDisable(false);
@@ -488,7 +488,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
             showDialog("Congratulation Player 2 Won");
 
         }
-        draw = true;
+        isDraw = false;
         diableButtons();
         btn_play_again.setVisible(true);
         btn_play_again.setDisable(false);
@@ -599,7 +599,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
     public void playAgain() {
         gameBoardX = new int[3][3];
         gameBoardO = new int[3][3];
-        draw = false;
+        isDraw = false;
 
         currentTurn = 1;
 
