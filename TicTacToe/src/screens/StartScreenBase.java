@@ -1,12 +1,16 @@
 package screens;
 
+import javafx.event.EventHandler;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 public class StartScreenBase extends AnchorPane {
 
@@ -15,8 +19,12 @@ public class StartScreenBase extends AnchorPane {
     public final Button playOfflineBtn;
     protected final ImageView logoImage;
     protected final Text text;
-    
-    public StartScreenBase() {
+    protected Stage currentStage;
+
+    public StartScreenBase(Stage primaryStage) {
+
+        currentStage = primaryStage;
+
         imageView = new ImageView();
         playOnlineBtn = new Button();
         playOfflineBtn = new Button();
@@ -28,7 +36,7 @@ public class StartScreenBase extends AnchorPane {
         imageView.setImage(new Image(getClass().getResource("/images/background.png").toExternalForm()));
         setId("AnchorPane");
         setPrefHeight(400.0);
-        setPrefWidth(600.0);        
+        setPrefWidth(600.0);
 
         AnchorPane.setLeftAnchor(playOnlineBtn, 220.0);
         AnchorPane.setRightAnchor(playOnlineBtn, 220.0);
@@ -53,7 +61,7 @@ public class StartScreenBase extends AnchorPane {
         logoImage.setPickOnBounds(true);
         logoImage.setPreserveRatio(true);
         logoImage.setImage(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
-        
+
         text.setLayoutX(200.0);
         text.setLayoutY(125.0);
         text.setText("Tic Tac Toe");
@@ -64,5 +72,34 @@ public class StartScreenBase extends AnchorPane {
         getChildren().add(playOfflineBtn);
         getChildren().add(logoImage);
         getChildren().add(text);
+
+        initButtonActions();
+    }
+
+    public void initButtonActions() {
+
+        playOfflineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
+                navigate(offlineScreen);
+
+            }
+        });
+
+        playOnlineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                LoginScreen loginScreen = new LoginScreen(currentStage);
+                navigate(loginScreen);
+            }
+        });
+    }
+
+    public void navigate(Parent screen) {
+        screen.setStyle("-fx-font-family: Stroke;");
+        Scene scene = new Scene(screen);
+        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
+        currentStage.setScene(scene);
     }
 }

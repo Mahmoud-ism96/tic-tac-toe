@@ -5,6 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -18,6 +20,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class OfflineGameBoardScreen extends AnchorPane {
 
@@ -48,13 +51,20 @@ public class OfflineGameBoardScreen extends AnchorPane {
     protected final ImageView imageView2;
     protected final ImageView imageView3;
     protected int currentTurn;
-    protected int [][] gameBoardX;
-    protected int [][] gameBoardO;
+    protected int[][] gameBoardX;
+    protected int[][] gameBoardO;
     protected boolean draw;
     protected int playerOneScore;
     protected int playerTwoScore;
-    
-    public OfflineGameBoardScreen() {
+    protected Stage currentStage;
+
+    protected Dialog warningDialog;
+    protected ButtonType yesButton;
+    protected Optional<ButtonType> result;
+
+    public OfflineGameBoardScreen(Stage primaryStage) {
+
+        currentStage = primaryStage;
 
         win_condition = new ImageView();
         imageView = new ImageView();
@@ -82,13 +92,13 @@ public class OfflineGameBoardScreen extends AnchorPane {
         imageView1 = new ImageView();
         imageView2 = new ImageView();
         imageView3 = new ImageView();
-        gameBoardX = new int [3][3];
-        gameBoardO = new int [3][3];
+        gameBoardX = new int[3][3];
+        gameBoardO = new int[3][3];
         draw = false;
-        
+
         playerOneScore = 0;
         playerTwoScore = 0;
-        
+
         currentTurn = 1;
 
         setMaxHeight(USE_PREF_SIZE);
@@ -97,7 +107,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
         setMinWidth(USE_PREF_SIZE);
         setPrefHeight(400.0);
         setPrefWidth(600.0);
-        
+
         imageView.setFitHeight(400.0);
         imageView.setFitWidth(600.0);
         imageView.setImage(new Image(getClass().getResource("/images/background.png").toExternalForm()));
@@ -118,7 +128,7 @@ public class OfflineGameBoardScreen extends AnchorPane {
         btn_back.setPickOnBounds(true);
         btn_back.setPreserveRatio(true);
         btn_back.setImage(new Image(getClass().getResource("/images/back_button.png").toExternalForm()));
-        
+
         AnchorPane.setBottomAnchor(btn_play_again, 20.0);
         AnchorPane.setRightAnchor(btn_play_again, 20.0);
         btn_play_again.setFitHeight(50.0);
@@ -307,154 +317,195 @@ public class OfflineGameBoardScreen extends AnchorPane {
         getChildren().add(imageView3);
         getChildren().add(win_condition);
         getChildren().add(btn_play_again);
+        
+        initButtonActions();
+    }
 
-        board_0_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+    public void initButtonActions() {
+        board_0_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_0_0);
             }
         });
-        
-        board_0_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_0_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_0_1);
             }
         });
-        
-        board_0_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_0_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_0_2);
             }
         });
-        
-        board_1_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_1_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_1_0);
             }
         });
-        
-        board_1_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_1_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_1_1);
             }
         });
-        
-        board_1_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_1_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_1_2);
             }
         });
-        
-        board_2_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_2_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_2_0);
             }
         });
-        
-        board_2_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_2_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_2_1);
             }
         });
-        
-        board_2_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_2_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_2_2);
             }
         });
-        
-        btn_play_again.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        btn_play_again.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 playAgain();
             }
         });
 
+        btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                leavingAlert();
+
+                if (result.get() == yesButton) {
+                    OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
+                    navigate(offlineScreen);
+                    resetScores();
+                    playAgain();
+                }
+            }
+        });
 
     }
-    public void setXorO(ImageView clickedButton){
-        if(currentTurn % 2 != 0){
+
+    public void navigate(Parent screen) {
+        screen.setStyle("-fx-font-family: Stroke;");
+        Scene scene = new Scene(screen);
+        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
+        currentStage.setScene(scene);
+    }
+
+    public void setXorO(ImageView clickedButton) {
+        if (currentTurn % 2 != 0) {
             clickedButton.setImage(new Image(getClass().getResource("/images/x_icon.png").toExternalForm()));
             updateGameBoard(clickedButton);
-        }else {
+        } else {
             clickedButton.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             updateGameBoard(clickedButton);
         }
         currentTurn++;
         clickedButton.setDisable(true);
     }
-    public void updateGameBoard (ImageView clickedButton){
+
+    public void updateGameBoard(ImageView clickedButton) {
         int row = GridPane.getRowIndex(clickedButton);
         int column = GridPane.getColumnIndex(clickedButton);
-        if(currentTurn % 2 != 0){
-            gameBoardX[row][column] =1;
-            if(currentTurn > 4)
+        if (currentTurn % 2 != 0) {
+            gameBoardX[row][column] = 1;
+            if (currentTurn > 4) {
                 checkWinCondition(gameBoardX);
-        }else {
-            gameBoardO[row][column] =1;
-            if(currentTurn > 4)
+            }
+        } else {
+            gameBoardO[row][column] = 1;
+            if (currentTurn > 4) {
                 checkWinCondition(gameBoardO);
+            }
         }
-        
+
     }
-    public void checkWinCondition(int currentGameBoard [][]){
-        
-        if(currentGameBoard[0][0] == 1 && currentGameBoard[0][1] == 1 && currentGameBoard[0][2] == 1){announceWinner(1); }
-        else if(currentGameBoard[1][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[1][2] == 1){announceWinner(2); }
-        else if(currentGameBoard[2][0] == 1 && currentGameBoard[2][1] == 1 && currentGameBoard[2][2] == 1){announceWinner(3); }
-        else if(currentGameBoard[0][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][2] == 1){announceWinner(4); }
-        else if(currentGameBoard[0][2] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][0] == 1){announceWinner(5); }
-        else if(currentGameBoard[0][0] == 1 && currentGameBoard[1][0] == 1 && currentGameBoard[2][0] == 1){announceWinner(6); }
-        else if(currentGameBoard[0][1] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][1] == 1){announceWinner(7); }
-        else if(currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1){announceWinner(8); }
-        else if(currentTurn == 9 && draw == false ){        
+
+    public void checkWinCondition(int currentGameBoard[][]) {
+
+        if (currentGameBoard[0][0] == 1 && currentGameBoard[0][1] == 1 && currentGameBoard[0][2] == 1) {
+            announceWinner(1);
+        } else if (currentGameBoard[1][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[1][2] == 1) {
+            announceWinner(2);
+        } else if (currentGameBoard[2][0] == 1 && currentGameBoard[2][1] == 1 && currentGameBoard[2][2] == 1) {
+            announceWinner(3);
+        } else if (currentGameBoard[0][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][2] == 1) {
+            announceWinner(4);
+        } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][0] == 1) {
+            announceWinner(5);
+        } else if (currentGameBoard[0][0] == 1 && currentGameBoard[1][0] == 1 && currentGameBoard[2][0] == 1) {
+            announceWinner(6);
+        } else if (currentGameBoard[0][1] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][1] == 1) {
+            announceWinner(7);
+        } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1) {
+            announceWinner(8);
+        } else if (currentTurn == 9 && draw == false) {
             diableButtons();
             btn_play_again.setVisible(true);
-            btn_play_again.setDisable(false);}
+            btn_play_again.setDisable(false);
+        }
     }
-    public void announceWinner(int winCondition){
-        if(currentTurn % 2 != 0){
+
+    public void announceWinner(int winCondition) {
+        if (currentTurn % 2 != 0) {
             System.out.println("X WON");
             drawWin(winCondition);
             playerOneScore++;
             text_player_one.setText("Player 1: " + playerOneScore);
-            
+
             showDialog("Congratulation Player 1 Won");
-            
-        }else {
+
+        } else {
             System.out.println("O WON");
             drawWin(winCondition);
             playerTwoScore++;
             text_player_two.setText("Player 2: " + playerTwoScore);
-            
-           showDialog("Congratulation Player 2 Won");
-            
+
+            showDialog("Congratulation Player 2 Won");
+
         }
         draw = true;
         diableButtons();
         btn_play_again.setVisible(true);
         btn_play_again.setDisable(false);
     }
-    
-    public void drawWin(int winCondition){
-        
-        switch(winCondition){
-            case 1: {        
+
+    public void drawWin(int winCondition) {
+
+        switch (winCondition) {
+            case 1: {
                 win_condition.setFitHeight(100.0);
                 win_condition.setFitWidth(400.0);
                 win_condition.setLayoutX(100.0);
                 win_condition.setLayoutY(30.0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 2: {
                 win_condition.setFitHeight(100.0);
                 win_condition.setFitWidth(400.0);
@@ -462,7 +513,8 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(150.0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 3: {
                 win_condition.setFitHeight(100.0);
                 win_condition.setFitWidth(400.0);
@@ -470,7 +522,8 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(280.0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 4: {
                 win_condition.setFitHeight(500.0);
                 win_condition.setFitWidth(100.0);
@@ -478,7 +531,8 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(-50.0);
                 win_condition.setRotate(-44.0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 5: {
                 win_condition.setFitHeight(500.0);
                 win_condition.setFitWidth(100.0);
@@ -486,7 +540,8 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(-50.0);
                 win_condition.setRotate(44.0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 6: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
@@ -494,7 +549,8 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 7: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
@@ -502,7 +558,8 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 8: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
@@ -510,10 +567,12 @@ public class OfflineGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
         }
     }
-    public void diableButtons(){
+
+    public void diableButtons() {
         board_0_0.setDisable(true);
         board_1_0.setDisable(true);
         board_0_1.setDisable(true);
@@ -524,8 +583,8 @@ public class OfflineGameBoardScreen extends AnchorPane {
         board_2_1.setDisable(true);
         board_2_2.setDisable(true);
     }
-    
-    public void enableButtons(){
+
+    public void enableButtons() {
         board_0_0.setDisable(false);
         board_1_0.setDisable(false);
         board_0_1.setDisable(false);
@@ -536,18 +595,19 @@ public class OfflineGameBoardScreen extends AnchorPane {
         board_2_1.setDisable(false);
         board_2_2.setDisable(false);
     }
-    
-    public void playAgain(){
-        gameBoardX = new int [3][3];
-        gameBoardO = new int [3][3];
+
+    public void playAgain() {
+        gameBoardX = new int[3][3];
+        gameBoardO = new int[3][3];
         draw = false;
-        
+
         currentTurn = 1;
-        
+
         clearBoard();
         enableButtons();
     }
-    public void clearBoard(){
+
+    public void clearBoard() {
         board_0_0.setImage(null);
         board_1_0.setImage(null);
         board_0_1.setImage(null);
@@ -557,41 +617,62 @@ public class OfflineGameBoardScreen extends AnchorPane {
         board_2_0.setImage(null);
         board_2_1.setImage(null);
         board_2_2.setImage(null);
-        
+
         win_condition.setImage(null);
-        
+
         btn_play_again.setDisable(true);
         btn_play_again.setVisible(false);
     }
-    public void resetScores(){
+
+    public void resetScores() {
         playerOneScore = 0;
         playerTwoScore = 0;
         text_player_one.setText("Player 1: " + playerOneScore);
         text_player_two.setText("Player 2: " + playerTwoScore);
     }
-    
-    public void showDialog(String msg){
-    
-            Dialog dialog = new Dialog();
-            DialogPane dialogPane = dialog.getDialogPane();
-            dialogPane.setStyle("-fx-background-color: #fff;");
-            dialog.setContentText(msg);
-            dialog.setTitle("Congratulation");
 
-            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-          
-            dialog.getDialogPane().getButtonTypes().addAll(okButton);
+    public void showDialog(String msg) {
 
-       
-            Button okButtonStyle = (Button) dialog.getDialogPane().lookupButton(okButton);
-            okButtonStyle.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
-            okButtonStyle.setAlignment(Pos.CENTER);
-   
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.get() == okButton){
-            }else {
-   
-            }
-   
+        Dialog dialog = new Dialog();
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #fff;");
+        dialog.setContentText(msg);
+        dialog.setTitle("Congratulation");
+
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+
+        dialog.getDialogPane().getButtonTypes().addAll(okButton);
+
+        Button okButtonStyle = (Button) dialog.getDialogPane().lookupButton(okButton);
+        okButtonStyle.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+        okButtonStyle.setAlignment(Pos.CENTER);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.get() == okButton) {
+        } else {
+
+        }
+
+    }
+
+    public void leavingAlert() {
+
+        Dialog warningDialog = new Dialog();
+        DialogPane dialogPane = warningDialog.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #fff;");
+        warningDialog.setContentText("Are you sure want to leave?");
+        warningDialog.setTitle("Confirmation");
+
+        yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        warningDialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
+        dialogPane.lookupButton(cancelButton).setVisible(true);
+
+        Button okButton = (Button) warningDialog.getDialogPane().lookupButton(yesButton);
+        okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+        okButton.setAlignment(Pos.CENTER);
+
+        result = warningDialog.showAndWait();
+
     }
 }

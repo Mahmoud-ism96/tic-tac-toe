@@ -1,8 +1,6 @@
 package screens;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,12 +8,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 public class OfflineScreenBase extends AnchorPane {
 
@@ -26,7 +21,11 @@ public class OfflineScreenBase extends AnchorPane {
     protected final Text text;
     public final ImageView backImage;
 
-    public OfflineScreenBase() {
+    protected Stage currentStage;
+
+    public OfflineScreenBase(Stage primaryStage) {
+
+        currentStage = primaryStage;
 
         imageView = new ImageView();
         playLocallyBtn = new Button();
@@ -70,7 +69,7 @@ public class OfflineScreenBase extends AnchorPane {
         logoImage.setPickOnBounds(true);
         logoImage.setPreserveRatio(true);
         logoImage.setImage(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
-        
+
         text.setLayoutX(200.0);
         text.setLayoutY(125.0);
         text.setText("Tic Tac Toe");
@@ -90,7 +89,42 @@ public class OfflineScreenBase extends AnchorPane {
         getChildren().add(logoImage);
         getChildren().add(text);
         getChildren().add(backImage);
+        
+        initButtonActions();
 
+    }
+
+    public void initButtonActions() {
+        playLocallyBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                OfflineGameBoardScreen offlineGameBoardScreen = new OfflineGameBoardScreen(currentStage);
+                navigate(offlineGameBoardScreen);
+            }
+        });
+
+        play_with_pc.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ComputerGameBoardScreen computerGameBoardScreen = new ComputerGameBoardScreen(currentStage);
+                navigate(computerGameBoardScreen);
+            }
+        });
+
+        backImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                StartScreenBase startScreen = new StartScreenBase(currentStage);
+                navigate(startScreen);
+            }
+        });
+    }
+
+    public void navigate(Parent screen) {
+        screen.setStyle("-fx-font-family: Stroke;");
+        Scene scene = new Scene(screen);
+        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
+        currentStage.setScene(scene);
     }
 
 }

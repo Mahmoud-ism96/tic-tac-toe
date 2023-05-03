@@ -1,14 +1,19 @@
 package screens;
 
+import javafx.event.EventHandler;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-public  class LoginScreen extends AnchorPane {
+public class LoginScreen extends AnchorPane {
 
     protected final ImageView background;
     protected final ImageView icon_username;
@@ -26,7 +31,11 @@ public  class LoginScreen extends AnchorPane {
     protected Image img_background;
     protected Image img_back;
 
-    public LoginScreen() {
+    protected Stage currentStage;
+
+    public LoginScreen(Stage primaryStage) {
+
+        currentStage = primaryStage;
 
         background = new ImageView();
         icon_username = new ImageView();
@@ -37,12 +46,12 @@ public  class LoginScreen extends AnchorPane {
         tv_username = new TextField();
         tv_password = new TextField();
         btn_login = new Button();
-        
-        img_user=new Image(getClass().getResourceAsStream("/images/user.png"));
-        img_password=new Image(getClass().getResourceAsStream("/images/password.png"));
-        img_login=new Image(getClass().getResourceAsStream("/images/login.png"));
-        img_background=new Image(getClass().getResourceAsStream("/images/background.png"));
-        img_back=new Image(getClass().getResourceAsStream("/images/back_button.png"));
+
+        img_user = new Image(getClass().getResourceAsStream("/images/user.png"));
+        img_password = new Image(getClass().getResourceAsStream("/images/password.png"));
+        img_login = new Image(getClass().getResourceAsStream("/images/login.png"));
+        img_background = new Image(getClass().getResourceAsStream("/images/background.png"));
+        img_back = new Image(getClass().getResourceAsStream("/images/back_button.png"));
 
         background.setImage(img_background);
         icon_username.setImage(img_user);
@@ -86,7 +95,7 @@ public  class LoginScreen extends AnchorPane {
         icon_login.setLayoutY(35.0);
         icon_login.setPickOnBounds(true);
         icon_login.setPreserveRatio(true);
-        
+
         icon_back.setFitHeight(50.0);
         icon_back.setFitWidth(50.0);
         icon_back.setLayoutX(25.0);
@@ -111,7 +120,6 @@ public  class LoginScreen extends AnchorPane {
         tv_password.setPromptText("password");
         tv_password.setStyle("-fx-border-color: BLACK;");
 
-        
         AnchorPane.setLeftAnchor(btn_login, 253.0);
         AnchorPane.setRightAnchor(btn_login, 253.0);
         btn_login.setLayoutY(280.0);
@@ -129,6 +137,33 @@ public  class LoginScreen extends AnchorPane {
         getChildren().add(tv_username);
         getChildren().add(tv_password);
         getChildren().add(btn_login);
-       
+
+        initButtonActions();
+
+    }
+
+    public void initButtonActions() {
+        txt_signUp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                RegisterScreen registerScreen = new RegisterScreen(currentStage);
+                navigate(registerScreen);
+            }
+        });
+
+        icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                StartScreenBase startScreen = new StartScreenBase(currentStage);
+                navigate(startScreen);
+            }
+        });
+    }
+
+    public void navigate(Parent screen) {
+        screen.setStyle("-fx-font-family: Stroke;");
+        Scene scene = new Scene(screen);
+        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
+        currentStage.setScene(scene);
     }
 }
