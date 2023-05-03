@@ -8,7 +8,7 @@
 
 <AnchorPane id="AnchorPane" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Button fx:id="playOnlineBtn" layoutX="226.0" layoutY="176.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="168.0" styleClass="OnlineButtons" stylesheets="@../css.css" text="Play Online" textAlignment="CENTER" />
       <Button fx:id="playOfflineBtn" layoutX="226.0" layoutY="248.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="168.0" styleClass="OnlineButtons" stylesheets="@../css.css" text="Play Offline" />
       <ImageView fx:id="logoImage" fitHeight="61.0" fitWidth="93.0" layoutX="171.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true">
