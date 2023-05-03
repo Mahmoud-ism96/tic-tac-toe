@@ -18,7 +18,7 @@
       <Text fx:id="txt_signUp" layoutX="225.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Donot have Account? Register here" textAlignment="CENTER" />
       <TextField fx:id="tv_username" layoutX="243.0" layoutY="178.0" promptText="username" style="-fx-border-color: BLACK;" />
       <TextField fx:id="tv_password" layoutX="243.0" layoutY="232.0" promptText="password" style="-fx-border-color: BLACK;" />
-      <Button fx:id="btn_login" layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="25.0" prefWidth="110.0" style="-fx-background-color: BLACK; -fx-background-radius: 25;" text="Login" textFill="WHITE">
+      <Button fx:id="btn_login" layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="25.0" prefWidth="110.0" text="Login">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

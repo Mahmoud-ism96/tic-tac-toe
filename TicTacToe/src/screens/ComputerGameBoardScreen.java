@@ -5,8 +5,17 @@
  */
 package screens;
 
+import java.util.Optional;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -16,13 +25,14 @@ import javafx.scene.layout.GridPane;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  *
  * @author Mahmoud Ism
  */
 public class ComputerGameBoardScreen extends AnchorPane {
-    
+
     protected ImageView win_condition;
     protected final ImageView imageView;
     protected final Text text_player_one;
@@ -50,14 +60,22 @@ public class ComputerGameBoardScreen extends AnchorPane {
     protected final ImageView imageView2;
     protected final ImageView imageView3;
     protected int currentTurn;
-    protected int [][] gameBoardX;
-    protected int [][] gameBoardO;
-    protected boolean draw;
+    protected int[][] gameBoardX;
+    protected int[][] gameBoardO;
+    protected boolean isDraw;
     protected boolean noWinner;
     protected int playerOneScore;
     protected int playerTwoScore;
+    protected final DisplayingVideo displayingVideo;
+    protected Stage currentStage;
 
-    public ComputerGameBoardScreen(){
+    protected Dialog warningDialog;
+    protected ButtonType yesButton;
+    protected Optional<ButtonType> result;
+
+    public ComputerGameBoardScreen(Stage primaryStage) {
+
+        currentStage = primaryStage;
 
         win_condition = new ImageView();
         imageView = new ImageView();
@@ -85,14 +103,15 @@ public class ComputerGameBoardScreen extends AnchorPane {
         imageView1 = new ImageView();
         imageView2 = new ImageView();
         imageView3 = new ImageView();
-        gameBoardX = new int [3][3];
-        gameBoardO = new int [3][3];
-        draw = true;
+        gameBoardX = new int[3][3];
+        gameBoardO = new int[3][3];
+        displayingVideo = new DisplayingVideo();
+        isDraw = true;
         noWinner = true;
-        
+
         playerOneScore = 0;
         playerTwoScore = 0;
-        
+
         currentTurn = 1;
 
         setMaxHeight(USE_PREF_SIZE);
@@ -101,7 +120,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
         setMinWidth(USE_PREF_SIZE);
         setPrefHeight(400.0);
         setPrefWidth(600.0);
-        
+
         imageView.setFitHeight(400.0);
         imageView.setFitWidth(600.0);
         imageView.setImage(new Image(getClass().getResource("/images/background.png").toExternalForm()));
@@ -122,7 +141,7 @@ public class ComputerGameBoardScreen extends AnchorPane {
         btn_back.setPickOnBounds(true);
         btn_back.setPreserveRatio(true);
         btn_back.setImage(new Image(getClass().getResource("/images/back_button.png").toExternalForm()));
-        
+
         AnchorPane.setBottomAnchor(btn_play_again, 20.0);
         AnchorPane.setRightAnchor(btn_play_again, 20.0);
         btn_play_again.setFitHeight(50.0);
@@ -284,9 +303,6 @@ public class ComputerGameBoardScreen extends AnchorPane {
         imageView3.setLayoutX(320.0);
         imageView3.setRotate(180.0);
         imageView3.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-        
-
-        
 
         getChildren().add(imageView);
         getChildren().add(text_player_one);
@@ -315,79 +331,105 @@ public class ComputerGameBoardScreen extends AnchorPane {
         getChildren().add(imageView3);
         getChildren().add(win_condition);
 
-        board_0_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+        initButtonActions();
+
+    }
+
+    public void initButtonActions() {
+        board_0_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_0_0);
             }
         });
-        
-        board_0_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_0_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_0_1);
             }
         });
-        
-        board_0_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_0_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_0_2);
             }
         });
-        
-        board_1_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_1_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_1_0);
             }
         });
-        
-        board_1_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_1_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_1_1);
             }
         });
-        
-        board_1_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_1_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_1_2);
             }
         });
-        
-        board_2_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_2_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_2_0);
             }
         });
-        
-        board_2_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_2_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_2_1);
             }
         });
-        
-        board_2_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        board_2_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 setXorO(board_2_2);
             }
         });
-        
-        btn_play_again.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+
+        btn_play_again.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 playAgain();
             }
         });
 
+        btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
 
+                leavingAlert();
+
+                if (result.get() == yesButton) {
+                    OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
+                    navigate(offlineScreen);
+                    resetScores();
+                    playAgain();
+                }
+            }
+        });
     }
-    public void setXorO(ImageView clickedButton){
+
+    public void navigate(Parent screen) {
+        screen.setStyle("-fx-font-family: Stroke;");
+        Scene scene = new Scene(screen);
+        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
+        currentStage.setScene(scene);
+    }
+
+    public void setXorO(ImageView clickedButton) {
 
         clickedButton.setImage(new Image(getClass().getResource("/images/x_icon.png").toExternalForm()));
         updateGameBoard(clickedButton);
@@ -395,67 +437,81 @@ public class ComputerGameBoardScreen extends AnchorPane {
         currentTurn++;
         clickedButton.setDisable(true);
     }
-    
-    public void updateGameBoard (ImageView clickedButton){
+
+    public void updateGameBoard(ImageView clickedButton) {
         int row = GridPane.getRowIndex(clickedButton);
         int column = GridPane.getColumnIndex(clickedButton);
         gameBoardX[row][column] = 1;
         gameBoardO[row][column] = 2;
-        
-        if(currentTurn > 4)
+
+        if (currentTurn > 4) {
             checkWinCondition(gameBoardX);
-        if(noWinner)
+        }
+        if (noWinner) {
             computerLogic();
-        
+        }
     }
-    
-    public void checkWinCondition(int currentGameBoard [][]){
-        
-        if(currentGameBoard[0][0] == 1 && currentGameBoard[0][1] == 1 && currentGameBoard[0][2] == 1){announceWinner(1); }
-        else if(currentGameBoard[1][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[1][2] == 1){announceWinner(2); }
-        else if(currentGameBoard[2][0] == 1 && currentGameBoard[2][1] == 1 && currentGameBoard[2][2] == 1){announceWinner(3); }
-        else if(currentGameBoard[0][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][2] == 1){announceWinner(4); }
-        else if(currentGameBoard[0][2] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][0] == 1){announceWinner(5); }
-        else if(currentGameBoard[0][0] == 1 && currentGameBoard[1][0] == 1 && currentGameBoard[2][0] == 1){announceWinner(6); }
-        else if(currentGameBoard[0][1] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][1] == 1){announceWinner(7); }
-        else if(currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1){announceWinner(8); }
-        else if(currentTurn == 9 && draw == true ){
+
+    public void checkWinCondition(int currentGameBoard[][]) {
+
+        if (currentGameBoard[0][0] == 1 && currentGameBoard[0][1] == 1 && currentGameBoard[0][2] == 1) {
+            announceWinner(1);
+        } else if (currentGameBoard[1][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[1][2] == 1) {
+            announceWinner(2);
+        } else if (currentGameBoard[2][0] == 1 && currentGameBoard[2][1] == 1 && currentGameBoard[2][2] == 1) {
+            announceWinner(3);
+        } else if (currentGameBoard[0][0] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][2] == 1) {
+            announceWinner(4);
+        } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][0] == 1) {
+            announceWinner(5);
+        } else if (currentGameBoard[0][0] == 1 && currentGameBoard[1][0] == 1 && currentGameBoard[2][0] == 1) {
+            announceWinner(6);
+        } else if (currentGameBoard[0][1] == 1 && currentGameBoard[1][1] == 1 && currentGameBoard[2][1] == 1) {
+            announceWinner(7);
+        } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1) {
+            announceWinner(8);
+        } else if (currentTurn == 9 && isDraw == true) {
             noWinner = true;
             diableButtons();
             btn_play_again.setVisible(true);
             btn_play_again.setDisable(false);
         }
     }
-    public void announceWinner(int winCondition){
-        if(currentTurn % 2 != 0){
+
+    public void announceWinner(int winCondition) {
+        if (currentTurn % 2 != 0) {
             System.out.println("X WON");
             drawWin(winCondition);
             playerOneScore++;
             text_player_one.setText("Player 1: " + playerOneScore);
-        }else {
+            displayingVideo.displayVideo("/assets/videos/Winning.mp4");
+
+        } else {
             System.out.println("O WON");
             drawWin(winCondition);
             playerTwoScore++;
             text_player_two.setText("Computer: " + playerTwoScore);
+            displayingVideo.displayVideo("/assets/videos/Losing.mp4");
         }
-        draw = false;
+        isDraw = false;
         noWinner = false;
         diableButtons();
         btn_play_again.setVisible(true);
         btn_play_again.setDisable(false);
     }
-    
-    public void drawWin(int winCondition){
-        
-        switch(winCondition){
-            case 1: {        
+
+    public void drawWin(int winCondition) {
+
+        switch (winCondition) {
+            case 1: {
                 win_condition.setFitHeight(100.0);
                 win_condition.setFitWidth(400.0);
                 win_condition.setLayoutX(100.0);
                 win_condition.setLayoutY(30.0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 2: {
                 win_condition.setFitHeight(100.0);
                 win_condition.setFitWidth(400.0);
@@ -463,7 +519,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(150.0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 3: {
                 win_condition.setFitHeight(100.0);
                 win_condition.setFitWidth(400.0);
@@ -471,7 +528,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(280.0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/horizontal_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 4: {
                 win_condition.setFitHeight(500.0);
                 win_condition.setFitWidth(100.0);
@@ -479,7 +537,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(-50.0);
                 win_condition.setRotate(-44.0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 5: {
                 win_condition.setFitHeight(500.0);
                 win_condition.setFitWidth(100.0);
@@ -487,7 +546,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(-50.0);
                 win_condition.setRotate(44.0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 6: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
@@ -495,7 +555,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 7: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
@@ -503,7 +564,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
             case 8: {
                 win_condition.setFitHeight(400.0);
                 win_condition.setFitWidth(100.0);
@@ -511,53 +573,46 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 win_condition.setLayoutY(0);
                 win_condition.setRotate(0);
                 win_condition.setImage(new Image(getClass().getResource("/images/vertical_stroke.png").toExternalForm()));
-            }break;
+            }
+            break;
         }
     }
-    
-    public void computerLogic(){
-                
-        if(gameBoardO[1][1] == 0){
+
+    public void computerLogic() {
+
+        if (gameBoardO[1][1] == 0) {
             board_1_1.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[1][1] = 1;
             board_1_1.setDisable(true);
-        }
-        else if(gameBoardO[0][0] == 0){
+        } else if (gameBoardO[0][0] == 0) {
             board_0_0.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[0][0] = 1;
             board_0_0.setDisable(true);
-        }
-        else if(gameBoardO[0][2] == 0){
+        } else if (gameBoardO[0][2] == 0) {
             board_0_2.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[0][2] = 1;
             board_0_2.setDisable(true);
-        }
-        else if(gameBoardO[2][0] == 0){
+        } else if (gameBoardO[2][0] == 0) {
             board_2_0.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[2][0] = 1;
             board_2_0.setDisable(true);
-        }
-        else if(gameBoardO[2][2] == 0){
+        } else if (gameBoardO[2][2] == 0) {
             board_2_2.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[2][2] = 1;
             board_2_2.setDisable(true);
-        }
-        else if(gameBoardO[1][2] == 0){
+        } else if (gameBoardO[1][2] == 0) {
             board_1_2.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[1][2] = 1;
             board_1_2.setDisable(true);
-        }
-        else if(gameBoardO[1][0] == 0){
+        } else if (gameBoardO[1][0] == 0) {
             board_1_0.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[1][0] = 1;
             board_1_0.setDisable(true);
-        }
-        else if(gameBoardO[2][1] == 0){
+        } else if (gameBoardO[2][1] == 0) {
             board_2_1.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[2][1] = 1;
             board_2_1.setDisable(true);
-        }
-        else if(gameBoardO[0][1] == 0){
+        } else if (gameBoardO[0][1] == 0) {
             board_0_1.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
             gameBoardO[0][1] = 1;
             board_0_1.setDisable(true);
@@ -565,8 +620,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
         currentTurn++;
         checkWinCondition(gameBoardO);
     }
-    
-    public void diableButtons(){
+
+    public void diableButtons() {
         board_0_0.setDisable(true);
         board_1_0.setDisable(true);
         board_0_1.setDisable(true);
@@ -577,8 +632,8 @@ public class ComputerGameBoardScreen extends AnchorPane {
         board_2_1.setDisable(true);
         board_2_2.setDisable(true);
     }
-    
-    public void enableButtons(){
+
+    public void enableButtons() {
         board_0_0.setDisable(false);
         board_1_0.setDisable(false);
         board_0_1.setDisable(false);
@@ -589,19 +644,20 @@ public class ComputerGameBoardScreen extends AnchorPane {
         board_2_1.setDisable(false);
         board_2_2.setDisable(false);
     }
-    
-    public void playAgain(){
-        gameBoardX = new int [3][3];
-        gameBoardO = new int [3][3];
-        draw = true;
+
+    public void playAgain() {
+        gameBoardX = new int[3][3];
+        gameBoardO = new int[3][3];
+        isDraw = true;
         noWinner = true;
-        
+
         currentTurn = 1;
-        
-        clearBoard();        
+
+        clearBoard();
         enableButtons();
     }
-    public void clearBoard(){
+
+    public void clearBoard() {
         board_0_0.setImage(null);
         board_1_0.setImage(null);
         board_0_1.setImage(null);
@@ -611,17 +667,39 @@ public class ComputerGameBoardScreen extends AnchorPane {
         board_2_0.setImage(null);
         board_2_1.setImage(null);
         board_2_2.setImage(null);
-        
+
         win_condition.setImage(null);
-        
+
         btn_play_again.setDisable(true);
         btn_play_again.setVisible(false);
     }
-    public void resetScores(){
+
+    public void resetScores() {
         playerOneScore = 0;
         playerTwoScore = 0;
-        
+
         text_player_one.setText("Player 1: " + playerOneScore);
         text_player_two.setText("Computer: " + playerTwoScore);
+    }
+
+    public void leavingAlert() {
+
+        Dialog warningDialog = new Dialog();
+        DialogPane dialogPane = warningDialog.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #fff;");
+        warningDialog.setContentText("Are you sure want to leave?");
+        warningDialog.setTitle("Confirmation");
+
+        yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        warningDialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
+        dialogPane.lookupButton(cancelButton).setVisible(true);
+
+        Button okButton = (Button) warningDialog.getDialogPane().lookupButton(yesButton);
+        okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+        okButton.setAlignment(Pos.CENTER);
+
+        result = warningDialog.showAndWait();
+
     }
 }
