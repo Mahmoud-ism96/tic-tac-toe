@@ -25,7 +25,7 @@ public class LoginScreen extends AnchorPane {
     protected final TextField tv_password;
     protected final Button btn_login;
 
-    protected Image img_user;
+    protected Image img_email_user;
     protected Image img_password;
     protected Image img_login;
     protected Image img_background;
@@ -47,14 +47,14 @@ public class LoginScreen extends AnchorPane {
         tv_password = new TextField();
         btn_login = new Button();
 
-        img_user = new Image(getClass().getResourceAsStream("/images/user.png"));
+        img_email_user = new Image(getClass().getResourceAsStream("/images/email.png"));
         img_password = new Image(getClass().getResourceAsStream("/images/password.png"));
         img_login = new Image(getClass().getResourceAsStream("/images/login.png"));
         img_background = new Image(getClass().getResourceAsStream("/images/background.png"));
         img_back = new Image(getClass().getResourceAsStream("/images/back_button.png"));
 
         background.setImage(img_background);
-        icon_username.setImage(img_user);
+        icon_username.setImage(img_email_user);
         icon_password.setImage(img_password);
         icon_login.setImage(img_login);
         icon_back.setImage(img_back);
@@ -75,8 +75,8 @@ public class LoginScreen extends AnchorPane {
         background.setPickOnBounds(true);
         background.setPreserveRatio(true);
 
-        AnchorPane.setLeftAnchor(icon_username, 200.0);
-        AnchorPane.setRightAnchor(icon_username, 200.0);
+        AnchorPane.setLeftAnchor(icon_username, 197.0);
+        AnchorPane.setRightAnchor(icon_username, 202.0);
         icon_username.setFitHeight(30.0);
         icon_username.setFitWidth(30.0);
         icon_username.setLayoutY(176.0);
@@ -117,13 +117,13 @@ public class LoginScreen extends AnchorPane {
         AnchorPane.setLeftAnchor(tv_username, 230.0);
         AnchorPane.setRightAnchor(tv_username, 230.0);
         tv_username.setLayoutY(178.0);
-        tv_username.setPromptText("username");
+        tv_username.setPromptText("Email");
         tv_username.setStyle("-fx-border-color: BLACK;");
 
         AnchorPane.setLeftAnchor(tv_password, 230.0);
         AnchorPane.setRightAnchor(tv_password, 230.0);
         tv_password.setLayoutY(232.0);
-        tv_password.setPromptText("password");
+        tv_password.setPromptText("Password");
         tv_password.setStyle("-fx-border-color: BLACK;");
 
         AnchorPane.setLeftAnchor(btn_login, 253.0);
