@@ -23,17 +23,20 @@ public class RegisterScreen extends AnchorPane {
 
     protected final ImageView img_background;
     protected final TextField tv_username;
+    protected final TextField tv_dispalyname;
     protected final PasswordField tv_password;
     protected final PasswordField tv_confirm_password;
     protected final Button btn_register;
     public final Text txt_signIn;
     protected final ImageView icon_register;
     protected final ImageView icon_username;
+    protected final ImageView icon_displayname;
     protected final ImageView icon_password;
     protected final ImageView icon_confirm_password;
     public ImageView icon_back;
 
     protected Image img_user;
+    protected Image img_displayname;
     protected Image img_password;
     protected Image img_register;
     protected Image background;
@@ -48,17 +51,20 @@ public class RegisterScreen extends AnchorPane {
 
         img_background = new ImageView();
         tv_username = new TextField();
+        tv_dispalyname = new TextField();
         tv_password = new PasswordField();
         tv_confirm_password = new PasswordField();
         btn_register = new Button();
         txt_signIn = new Text();
         icon_register = new ImageView();
         icon_username = new ImageView();
+        icon_displayname=new ImageView();
         icon_password = new ImageView();
         icon_confirm_password = new ImageView();
         icon_back = new ImageView();
 
         img_user = new Image(getClass().getResourceAsStream("/images/user.png"));
+        img_displayname = new Image(getClass().getResourceAsStream("/images/displayname.png"));
         img_password = new Image(getClass().getResourceAsStream("/images/password.png"));
         img_confirm_password = new Image(getClass().getResourceAsStream("/images/confirm.png"));
         img_register = new Image(getClass().getResourceAsStream("/images/register.png"));
@@ -67,6 +73,7 @@ public class RegisterScreen extends AnchorPane {
 
         img_background.setImage(background);
         icon_username.setImage(img_user);
+        icon_displayname.setImage(img_displayname);
         icon_password.setImage(img_password);
         icon_register.setImage(img_register);
         icon_back.setImage(img_back);
@@ -87,20 +94,27 @@ public class RegisterScreen extends AnchorPane {
         
         AnchorPane.setLeftAnchor(tv_username, 230.0);
         AnchorPane.setRightAnchor(tv_username, 230.0);
-        tv_username.setLayoutY(151.0);
+        tv_username.setLayoutY(120.0);
         tv_username.setPromptText("username");
         tv_username.setStyle("-fx-border-color: BLACK;");
+        
+        AnchorPane.setLeftAnchor(tv_dispalyname, 230.0);
+        AnchorPane.setRightAnchor(tv_dispalyname, 230.0);
+        tv_dispalyname.setLayoutY(170.0);
+        tv_dispalyname.setPromptText("display name");
+        tv_dispalyname.setStyle("-fx-border-color: BLACK;");
+        
 
         AnchorPane.setLeftAnchor(tv_password, 230.0);
         AnchorPane.setRightAnchor(tv_password, 230.0);
-        tv_password.setLayoutY(207.0);
+        tv_password.setLayoutY(220.0);
         tv_password.setPromptText("password");
         tv_password.setStyle("-fx-border-color: BLACK;");
 
         AnchorPane.setLeftAnchor(tv_confirm_password, 230.0);
         AnchorPane.setRightAnchor(tv_confirm_password, 230.0);
         tv_confirm_password.setLayoutX(245.0);
-        tv_confirm_password.setLayoutY(261.0);
+        tv_confirm_password.setLayoutY(270.0);
         tv_confirm_password.setPromptText("confirm password");
         tv_confirm_password.setStyle("-fx-border-color: BLACK;");
 
@@ -113,8 +127,8 @@ public class RegisterScreen extends AnchorPane {
         btn_register.setText("Register");
         btn_register.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
-        AnchorPane.setLeftAnchor(txt_signIn, 250.0);
-        AnchorPane.setRightAnchor(txt_signIn, 250.0);
+        AnchorPane.setLeftAnchor(txt_signIn, 255.0);
+        AnchorPane.setRightAnchor(txt_signIn, 245.0);
         txt_signIn.setLayoutY(362.0);
         txt_signIn.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         txt_signIn.setStrokeWidth(0.0);
@@ -122,8 +136,8 @@ public class RegisterScreen extends AnchorPane {
 
         AnchorPane.setLeftAnchor(icon_register, 250.0);
         AnchorPane.setRightAnchor(icon_register, 250.0);
-        icon_register.setFitHeight(100.0);
-        icon_register.setFitWidth(100.0);
+        icon_register.setFitHeight(80.0);
+        icon_register.setFitWidth(80.0);
         icon_register.setLayoutY(14.0);
         icon_register.setPickOnBounds(true);
         icon_register.setPreserveRatio(true);
@@ -133,16 +147,25 @@ public class RegisterScreen extends AnchorPane {
         icon_username.setFitHeight(30.0);
         icon_username.setFitWidth(30.0);
         icon_username.setLayoutX(204.0);
-        icon_username.setLayoutY(149.0);
+        icon_username.setLayoutY(120.0);
         icon_username.setPickOnBounds(true);
         icon_username.setPreserveRatio(true);
+        
+        AnchorPane.setLeftAnchor(icon_displayname, 197.0);
+        AnchorPane.setRightAnchor(icon_displayname, 207.0);
+        icon_displayname.setFitHeight(30.0);
+        icon_displayname.setFitWidth(30.0);
+        //icon_displayname.setLayoutX(190.0);
+        icon_displayname.setLayoutY(170.0);
+        icon_displayname.setPickOnBounds(true);
+        icon_displayname.setPreserveRatio(true);
 
         AnchorPane.setLeftAnchor(icon_password, 200.0);
         AnchorPane.setRightAnchor(icon_password, 200.0);
         icon_password.setFitHeight(30.0);
         icon_password.setFitWidth(30.0);
         icon_password.setLayoutX(204.0);
-        icon_password.setLayoutY(205.0);
+        icon_password.setLayoutY(220.0);
         icon_password.setPickOnBounds(true);
         icon_password.setPreserveRatio(true);
 
@@ -151,7 +174,7 @@ public class RegisterScreen extends AnchorPane {
         icon_confirm_password.setFitHeight(30.0);
         icon_confirm_password.setFitWidth(30.0);
         icon_confirm_password.setLayoutX(204.0);
-        icon_confirm_password.setLayoutY(259.0);
+        icon_confirm_password.setLayoutY(270.0);
         icon_confirm_password.setPickOnBounds(true);
         icon_confirm_password.setPreserveRatio(true);
 
@@ -164,12 +187,14 @@ public class RegisterScreen extends AnchorPane {
 
         getChildren().add(img_background);
         getChildren().add(tv_username);
+        getChildren().add(tv_dispalyname);
         getChildren().add(tv_password);
         getChildren().add(tv_confirm_password);
         getChildren().add(btn_register);
         getChildren().add(txt_signIn);
         getChildren().add(icon_register);
         getChildren().add(icon_username);
+        getChildren().add(icon_displayname);
         getChildren().add(icon_password);
         getChildren().add(icon_confirm_password);
         getChildren().add(icon_back);
