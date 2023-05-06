@@ -106,9 +106,9 @@ public class LoginScreen extends AnchorPane {
         icon_back.setPickOnBounds(true);
         icon_back.setPreserveRatio(true);
 
-        AnchorPane.setLeftAnchor(txt_signUp, 200.0);
-        AnchorPane.setRightAnchor(txt_signUp, 200.0);
-        txt_signUp.setLayoutY(344.0);
+        AnchorPane.setLeftAnchor(txt_signUp, 215.0);
+        AnchorPane.setRightAnchor(txt_signUp, 185.0);
+        txt_signUp.setLayoutY(330.0);
         txt_signUp.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         txt_signUp.setStrokeWidth(0.0);
         txt_signUp.setText("Donot have Account? Register here");
