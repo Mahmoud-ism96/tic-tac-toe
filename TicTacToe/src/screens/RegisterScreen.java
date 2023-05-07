@@ -1,5 +1,8 @@
 package screens;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -177,8 +180,12 @@ public class RegisterScreen extends AnchorPane {
         txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                LoginScreen loginScreen = new LoginScreen(currentStage);
-                navigate(loginScreen);
+                try {
+                    LoginScreen loginScreen = new LoginScreen(currentStage);
+                    navigate(loginScreen);
+                } catch (IOException ex) {
+                    Logger.getLogger(RegisterScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {

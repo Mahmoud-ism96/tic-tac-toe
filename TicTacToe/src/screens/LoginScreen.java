@@ -1,5 +1,13 @@
 package screens;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,17 +22,39 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LoginScreen extends AnchorPane {
-
+    protected final TextField tv_username;
+    protected final TextField tv_password;
+    protected final Button btn_login;
     protected final ImageView background;
     protected final ImageView icon_username;
     protected final ImageView icon_password;
     protected final ImageView icon_login;
     public final ImageView icon_back;
     public final Text txt_signUp;
-    protected final TextField tv_username;
-    protected final TextField tv_password;
-    protected final Button btn_login;
 
+   
+ 
+    
+
+    String userName ;
+    String password;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     protected Image img_user;
     protected Image img_password;
     protected Image img_login;
@@ -32,8 +62,10 @@ public class LoginScreen extends AnchorPane {
     protected Image img_back;
 
     protected Stage currentStage;
+    
+    
 
-    public LoginScreen(Stage primaryStage) {
+    public LoginScreen(Stage primaryStage) throws IOException {
 
         currentStage = primaryStage;
 
@@ -139,8 +171,9 @@ public class LoginScreen extends AnchorPane {
         getChildren().add(btn_login);
 
         initButtonActions();
-
     }
+
+    
 
     public void initButtonActions() {
         txt_signUp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -158,6 +191,46 @@ public class LoginScreen extends AnchorPane {
                 navigate(startScreen);
             }
         });
+         btn_login.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+        public void handle(MouseEvent event) {
+        userName = tv_username.getText();
+        password = tv_password.getText();
+        
+        JsonObject jsonObject = new JsonObject();
+        JsonObject signinObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        signinObject.addProperty("username", userName);
+        signinObject.addProperty("password", password);
+        requestData.addProperty("request", "signup");
+        jsonObject.add("data", signinObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+                 Socket socket = null;
+                 PrintWriter out = null;
+                 OutputStream  outPutStream = null ;
+        try {
+             socket = new Socket("127.0.0.1", 1234);
+             outPutStream = socket.getOutputStream();
+              out = new PrintWriter(outPutStream,true);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }      
+        
+        
+        out.println(jsonString);
+        
+                try {
+                    outPutStream.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+               
+            ComputerGameBoardScreen computerBoard = new ComputerGameBoardScreen(currentStage);
+            navigate(computerBoard);
+            }
+        });
+        
     }
 
     public void navigate(Parent screen) {
@@ -166,4 +239,7 @@ public class LoginScreen extends AnchorPane {
         scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
         currentStage.setScene(scene);
     }
+      
 }
+
+
