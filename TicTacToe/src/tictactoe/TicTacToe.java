@@ -5,7 +5,9 @@
  */
 package tictactoe;
 
-import java.util.Optional;
+import java.time.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import screens.LoginScreen;
 import screens.RegisterScreen;
 import javafx.application.Application;
@@ -18,9 +20,13 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import screens.ComputerGameBoardScreen;
 import screens.OfflineGameBoardScreen;
 import screens.OfflineScreenBase;
@@ -38,7 +44,7 @@ public class TicTacToe extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+     
         initStartScreen(primaryStage);
 
         primaryStage.setTitle("Tic Tac Toe");
@@ -55,6 +61,7 @@ public class TicTacToe extends Application {
     }
 
     private void initStartScreen(Stage currentStage) {
+          
         Font.loadFont(TicTacToe.class.getResource("/assets/fonts/Stroke-082d.ttf").toExternalForm(), 10);
 
         startScreen = new StartScreenBase(currentStage);
@@ -63,5 +70,7 @@ public class TicTacToe extends Application {
         startScene = new Scene(startScreen);
         startScene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
        
-    }
+    }  
+
 }
+

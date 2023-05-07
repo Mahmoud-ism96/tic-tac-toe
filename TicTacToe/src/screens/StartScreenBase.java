@@ -1,5 +1,8 @@
 package screens;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -90,8 +93,12 @@ public class StartScreenBase extends AnchorPane {
         playOnlineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                LoginScreen loginScreen = new LoginScreen(currentStage);
-                navigate(loginScreen);
+                try {
+                    LoginScreen loginScreen = new LoginScreen(currentStage);
+                    navigate(loginScreen);
+                } catch (IOException ex) {
+                    Logger.getLogger(StartScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
