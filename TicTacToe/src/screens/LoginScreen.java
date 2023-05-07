@@ -206,7 +206,7 @@ public class LoginScreen extends AnchorPane {
         JsonObject requestData = new JsonObject();
         signinObject.addProperty("username", userName);
         signinObject.addProperty("password", password);
-        requestData.addProperty("request", "signup");
+        requestData.addProperty("request", "SIGNIN");
         jsonObject.add("data", signinObject);
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
@@ -214,7 +214,7 @@ public class LoginScreen extends AnchorPane {
                  PrintWriter out=null ;
                  OutputStream  outPutStream=null  ;
         try {
-             socket = new Socket("127.0.0.1", 1234);
+             socket = new Socket("192.168.100.7", 5005);
              outPutStream = socket.getOutputStream();
               out = new PrintWriter(outPutStream,true);
         } catch (IOException ex) {
