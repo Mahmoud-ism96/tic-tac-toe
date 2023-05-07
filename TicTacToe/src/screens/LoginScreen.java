@@ -210,9 +210,9 @@ public class LoginScreen extends AnchorPane {
         jsonObject.add("data", signinObject);
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
-                 Socket socket = null;
-                 PrintWriter out = null;
-                 OutputStream  outPutStream = null ;
+                 Socket socket ;
+                 PrintWriter out=null ;
+                 OutputStream  outPutStream=null  ;
         try {
              socket = new Socket("127.0.0.1", 1234);
              outPutStream = socket.getOutputStream();
