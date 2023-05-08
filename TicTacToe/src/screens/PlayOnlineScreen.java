@@ -18,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoe.Navigation;
 
 public class PlayOnlineScreen extends AnchorPane {
 
@@ -111,19 +112,12 @@ public class PlayOnlineScreen extends AnchorPane {
         initButtonActions();
     }
 
-    public void navigate(Parent screen) {
-        screen.setStyle("-fx-font-family: Stroke;");
-        Scene scene = new Scene(screen);
-        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
-        currentStage.setScene(scene);
-    }
-
     public void initButtonActions() {
         logoutBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 StartScreenBase startScreen = new StartScreenBase(currentStage);
-                navigate(startScreen);
+                Navigation.getInstance().navigate(startScreen, currentStage);
             }
         });
         
@@ -131,8 +125,7 @@ public class PlayOnlineScreen extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
                 OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
-                navigate(offlineScreen);
-                
+                Navigation.getInstance().navigate(offlineScreen, currentStage);
             }
         });
     }

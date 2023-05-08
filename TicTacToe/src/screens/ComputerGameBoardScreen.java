@@ -26,6 +26,7 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoe.Navigation;
 
 /**
  *
@@ -414,20 +415,13 @@ public class ComputerGameBoardScreen extends AnchorPane {
                 if (currentTurn > 1) {
                     leavingAlert();
                     if (result.get() == yesButton) {
-                        navigate(offlineScreen);
+                        Navigation.getInstance().navigate(offlineScreen, currentStage);
                     }
                 }else{
-                    navigate(offlineScreen);
+                    Navigation.getInstance().navigate(offlineScreen, currentStage);
                 }
             }
         });
-    }
-
-    public void navigate(Parent screen) {
-        screen.setStyle("-fx-font-family: Stroke;");
-        Scene scene = new Scene(screen);
-        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
-        currentStage.setScene(scene);
     }
 
     public void setXorO(ImageView clickedButton) {

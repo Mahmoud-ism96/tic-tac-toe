@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import tictactoe.Navigation;
 import tictactoe.ServerConnection;
 
 public class OfflineScreenBase extends AnchorPane {
@@ -121,9 +122,8 @@ public class OfflineScreenBase extends AnchorPane {
                 } else {
                     returnToScreen = new StartScreenBase(currentStage);
                 }
-                
-                navigate(returnToScreen);
 
+                Navigation.getInstance().navigate(returnToScreen, currentStage);
             }
         });
     }

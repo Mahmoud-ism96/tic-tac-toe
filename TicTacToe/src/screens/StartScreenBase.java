@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import tictactoe.Navigation;
 
 public class StartScreenBase extends AnchorPane {
 
@@ -85,7 +86,7 @@ public class StartScreenBase extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
                 OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
-                navigate(offlineScreen);
+                Navigation.getInstance().navigate(offlineScreen,currentStage);
 
             }
         });
@@ -95,7 +96,7 @@ public class StartScreenBase extends AnchorPane {
             public void handle(MouseEvent event) {
                 try {
                     LoginScreen loginScreen = new LoginScreen(currentStage);
-                    navigate(loginScreen);
+                    Navigation.getInstance().navigate(loginScreen,currentStage);
                 } catch (IOException ex) {
                     Logger.getLogger(StartScreenBase.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -103,10 +104,4 @@ public class StartScreenBase extends AnchorPane {
         });
     }
 
-    public void navigate(Parent screen) {
-        screen.setStyle("-fx-font-family: Stroke;");
-        Scene scene = new Scene(screen);
-        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
-        currentStage.setScene(scene);
-    }
 }

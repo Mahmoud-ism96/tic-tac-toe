@@ -34,6 +34,13 @@ public class TicTacToe extends Application {
         primaryStage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        ServerConnection.getInstance().closeConnection();
+    }
+
+    
+    
     /**
      * @param args the command line arguments
      */

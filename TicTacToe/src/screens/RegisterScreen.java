@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoe.Navigation;
 
 public class RegisterScreen extends AnchorPane {
 
@@ -242,7 +243,7 @@ public class RegisterScreen extends AnchorPane {
                         }
 
                     ComputerGameBoardScreen computerBoard = new ComputerGameBoardScreen(currentStage);
-                    navigate(computerBoard);
+                    Navigation.getInstance().navigate(computerBoard, currentStage);
                     }
                 });
 
@@ -254,7 +255,7 @@ public class RegisterScreen extends AnchorPane {
             public void handle(MouseEvent event) {
                 try {
                     LoginScreen loginScreen = new LoginScreen(currentStage);
-                    navigate(loginScreen);
+                    Navigation.getInstance().navigate(loginScreen, currentStage);
                 } catch (IOException ex) {
                     Logger.getLogger(RegisterScreen.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -264,18 +265,10 @@ public class RegisterScreen extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
                 StartScreenBase startScreen = new StartScreenBase(currentStage);
-                navigate(startScreen);
+                Navigation.getInstance().navigate(startScreen, currentStage);
             }
         });
     }
-
-    public void navigate(Parent screen) {
-        screen.setStyle("-fx-font-family: Stroke;");
-        Scene scene = new Scene(screen);
-        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
-        currentStage.setScene(scene);
-    }
-
     public void validation() {
 
         String name = tv_username.getText();

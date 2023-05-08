@@ -7,9 +7,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -18,8 +20,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoe.Navigation;
+import tictactoe.ServerConnection;
 
 public class LoginScreen extends AnchorPane {
+
     protected final TextField tv_username;
     protected final TextField tv_password;
     protected final Button btn_login;
@@ -29,12 +34,15 @@ public class LoginScreen extends AnchorPane {
     protected final ImageView icon_login;
     public final ImageView icon_back;
     public final Text txt_signUp;
+    protected Image img_user;
+    protected Image img_password;
+    protected Image img_login;
+    protected Image img_background;
+    protected Image img_back;
 
-   
- 
-    
+    protected Stage currentStage;
 
-    String userName ;
+    String userName;
     String password;
 
     public String getUserName() {
@@ -52,16 +60,6 @@ public class LoginScreen extends AnchorPane {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    protected Image img_user;
-    protected Image img_password;
-    protected Image img_login;
-    protected Image img_background;
-    protected Image img_back;
-
-    protected Stage currentStage;
-    
-    
 
     public LoginScreen(Stage primaryStage) throws IOException {
 
@@ -177,14 +175,12 @@ public class LoginScreen extends AnchorPane {
         initButtonActions();
     }
 
-    
-
     public void initButtonActions() {
         txt_signUp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 RegisterScreen registerScreen = new RegisterScreen(currentStage);
-                navigate(registerScreen);
+                Navigation.getInstance().navigate(registerScreen, currentStage);
             }
         });
 
@@ -192,58 +188,41 @@ public class LoginScreen extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
                 StartScreenBase startScreen = new StartScreenBase(currentStage);
-                navigate(startScreen);
+                Navigation.getInstance().navigate(startScreen, currentStage);
             }
         });
-         btn_login.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        btn_login.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
-        public void handle(MouseEvent event) {
-        userName = tv_username.getText();
-        password = tv_password.getText();
-        
-        JsonObject jsonObject = new JsonObject();
-        JsonObject signinObject = new JsonObject();
-        JsonObject requestData = new JsonObject();
-        signinObject.addProperty("username", userName);
-        signinObject.addProperty("password", password);
-        requestData.addProperty("request", "SIGNIN");
-        jsonObject.add("data", signinObject);
-        jsonObject.add("request", requestData);
-        String jsonString = jsonObject.toString();
-                 Socket socket ;
-                 PrintWriter out=null ;
-                 OutputStream  outPutStream=null  ;
-        try {
-             socket = new Socket("192.168.100.7", 5005);
-             outPutStream = socket.getOutputStream();
-              out = new PrintWriter(outPutStream,true);
-        } catch (IOException ex) {
-            Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }      
-        
-        
-        out.println(jsonString);
-        
-                try {
-                    outPutStream.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
-                }
-               
-            PlayOnlineScreen playOnlineScreenx = new PlayOnlineScreen(currentStage);
-            navigate(playOnlineScreenx);
+            public void handle(MouseEvent event) {
+                userName = tv_username.getText();
+                password = tv_password.getText();
+
+                JsonObject jsonObject = new JsonObject();
+                JsonObject signinObject = new JsonObject();
+                JsonObject requestData = new JsonObject();
+                signinObject.addProperty("username", userName);
+                signinObject.addProperty("password", password);
+                requestData.addProperty("request", "SIGNIN");
+                jsonObject.add("data", signinObject);
+                jsonObject.add("request", requestData);
+                String jsonString = jsonObject.toString();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ServerConnection.getInstance().setUpConnection("10.145.4.253");
+                        if (ServerConnection.getConnectionState()) {
+                            ServerConnection.getInstance().getPrintStream().println(jsonString);
+                        }
+                        PlayOnlineScreen playOnlineScreenx = new PlayOnlineScreen(currentStage);
+                        if (ServerConnection.getConnectionState()) {
+                            Navigation.getInstance().navigate(playOnlineScreenx, currentStage);
+                        }
+                    }
+                }).start();
             }
         });
-        
+
     }
 
-    public void navigate(Parent screen) {
-        screen.setStyle("-fx-font-family: Stroke;");
-        Scene scene = new Scene(screen);
-        scene.getStylesheets().add(getClass().getResource("/assets/css.css").toExternalForm());
-        currentStage.setScene(scene);
-    }
-      
 }
-
-
