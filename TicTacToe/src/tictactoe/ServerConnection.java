@@ -12,17 +12,25 @@ package tictactoe;
 public final class ServerConnection {
 
     private static ServerConnection INSTANCE;
-    
-    private ServerConnection() {        
+    private static boolean connectionState = false;
+
+    private ServerConnection() {
     }
-    
+
     public static ServerConnection getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new ServerConnection();
         }
-        
+
         return INSTANCE;
     }
 
+    public static boolean getConnectionState() {
+        return connectionState;
+    }
+
+    public static void setConnectionState(boolean state) {
+        connectionState = state;
+    }
 
 }

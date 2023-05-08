@@ -10,6 +10,7 @@ import static javafx.application.Application.launch;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import screens.PlayOnlineScreen;
 import screens.StartScreenBase;
 
 /**

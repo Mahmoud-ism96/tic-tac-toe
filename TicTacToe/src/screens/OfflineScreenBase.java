@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import tictactoe.ServerConnection;
 
 public class OfflineScreenBase extends AnchorPane {
 
@@ -89,7 +90,7 @@ public class OfflineScreenBase extends AnchorPane {
         getChildren().add(logoImage);
         getChildren().add(text);
         getChildren().add(backImage);
-        
+
         initButtonActions();
 
     }
@@ -114,8 +115,15 @@ public class OfflineScreenBase extends AnchorPane {
         backImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                StartScreenBase startScreen = new StartScreenBase(currentStage);
-                navigate(startScreen);
+                Parent returnToScreen;
+                if (ServerConnection.getConnectionState()) {
+                    returnToScreen = new PlayOnlineScreen(currentStage);
+                } else {
+                    returnToScreen = new StartScreenBase(currentStage);
+                }
+                
+                navigate(returnToScreen);
+
             }
         });
     }
