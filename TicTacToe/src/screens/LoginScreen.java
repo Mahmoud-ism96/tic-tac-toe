@@ -230,8 +230,8 @@ public class LoginScreen extends AnchorPane {
                     Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
                 }
                
-            ComputerGameBoardScreen computerBoard = new ComputerGameBoardScreen(currentStage);
-            navigate(computerBoard);
+            PlayOnlineScreen playOnlineScreenx = new PlayOnlineScreen(currentStage);
+            navigate(playOnlineScreenx);
             }
         });
         
