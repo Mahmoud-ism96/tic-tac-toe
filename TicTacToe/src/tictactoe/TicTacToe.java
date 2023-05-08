@@ -19,7 +19,7 @@ import screens.StartScreenBase;
  */
 public class TicTacToe extends Application {
 
-    PlayOnlineScreen startScreen;
+    StartScreenBase startScreen;
     Scene startScene;
 
 
@@ -45,7 +45,7 @@ public class TicTacToe extends Application {
           
         Font.loadFont(TicTacToe.class.getResource("/assets/fonts/Stroke-082d.ttf").toExternalForm(), 10);
 
-        startScreen = new PlayOnlineScreen(currentStage);
+        startScreen = new StartScreenBase(currentStage);
         startScreen.setStyle("-fx-font-family: Stroke;");
         
         startScene = new Scene(startScreen);
