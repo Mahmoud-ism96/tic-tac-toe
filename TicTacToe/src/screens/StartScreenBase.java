@@ -102,8 +102,8 @@ public class StartScreenBase extends AnchorPane {
                     if (!ServerConnection.getConnectionState()) {
                         serverIP = IPAlertDialog.display();
                         ServerConnection.getInstance().setUpConnection(serverIP);
-                        Navigation.getInstance().navigate(loginScreen, currentStage);
-                    } else {
+                    }
+                    if (ServerConnection.getConnectionState()) {
                         Navigation.getInstance().navigate(loginScreen, currentStage);
                     }
                 } catch (IOException ex) {

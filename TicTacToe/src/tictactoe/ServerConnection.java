@@ -69,7 +69,7 @@ public final class ServerConnection {
             connectionState = true;
         } catch (IOException ex) {
             failedToConnect();
-
+            closeConnection();
         }
     }
 
