@@ -1,6 +1,10 @@
 package screens;
 
+import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -23,17 +27,20 @@ public class RegisterScreen extends AnchorPane {
 
     protected final ImageView img_background;
     protected final TextField tv_username;
+    protected final TextField tv_displayname;
     protected final PasswordField tv_password;
     protected final PasswordField tv_confirm_password;
     protected final Button btn_register;
     public final Text txt_signIn;
     protected final ImageView icon_register;
     protected final ImageView icon_username;
+     protected final ImageView icon_diaplayname;
     protected final ImageView icon_password;
     protected final ImageView icon_confirm_password;
     public ImageView icon_back;
 
     protected Image img_user;
+    protected Image img_dispalyname;
     protected Image img_password;
     protected Image img_register;
     protected Image background;
@@ -48,17 +55,20 @@ public class RegisterScreen extends AnchorPane {
 
         img_background = new ImageView();
         tv_username = new TextField();
+        tv_displayname = new TextField();
         tv_password = new PasswordField();
         tv_confirm_password = new PasswordField();
         btn_register = new Button();
         txt_signIn = new Text();
         icon_register = new ImageView();
+        icon_diaplayname=new ImageView();
         icon_username = new ImageView();
         icon_password = new ImageView();
         icon_confirm_password = new ImageView();
         icon_back = new ImageView();
 
         img_user = new Image(getClass().getResourceAsStream("/images/user.png"));
+        img_dispalyname = new Image(getClass().getResourceAsStream("/images/displayname.png"));
         img_password = new Image(getClass().getResourceAsStream("/images/password.png"));
         img_confirm_password = new Image(getClass().getResourceAsStream("/images/confirm.png"));
         img_register = new Image(getClass().getResourceAsStream("/images/register.png"));
@@ -67,6 +77,7 @@ public class RegisterScreen extends AnchorPane {
 
         img_background.setImage(background);
         icon_username.setImage(img_user);
+        icon_diaplayname.setImage(img_dispalyname);
         icon_password.setImage(img_password);
         icon_register.setImage(img_register);
         icon_back.setImage(img_back);
@@ -87,20 +98,25 @@ public class RegisterScreen extends AnchorPane {
         
         AnchorPane.setLeftAnchor(tv_username, 230.0);
         AnchorPane.setRightAnchor(tv_username, 230.0);
-        tv_username.setLayoutY(151.0);
+        tv_username.setLayoutY(120.0);
         tv_username.setPromptText("username");
         tv_username.setStyle("-fx-border-color: BLACK;");
+        
+        AnchorPane.setLeftAnchor(tv_displayname, 230.0);
+        AnchorPane.setRightAnchor(tv_displayname, 230.0);
+        tv_displayname.setLayoutY(170.0);
+        tv_displayname.setPromptText("display name");
+        tv_displayname.setStyle("-fx-border-color: BLACK;");
 
         AnchorPane.setLeftAnchor(tv_password, 230.0);
         AnchorPane.setRightAnchor(tv_password, 230.0);
-        tv_password.setLayoutY(207.0);
+        tv_password.setLayoutY(220.0);
         tv_password.setPromptText("password");
         tv_password.setStyle("-fx-border-color: BLACK;");
 
         AnchorPane.setLeftAnchor(tv_confirm_password, 230.0);
         AnchorPane.setRightAnchor(tv_confirm_password, 230.0);
-        tv_confirm_password.setLayoutX(245.0);
-        tv_confirm_password.setLayoutY(261.0);
+        tv_confirm_password.setLayoutY(270.0);
         tv_confirm_password.setPromptText("confirm password");
         tv_confirm_password.setStyle("-fx-border-color: BLACK;");
 
@@ -132,17 +148,23 @@ public class RegisterScreen extends AnchorPane {
         AnchorPane.setRightAnchor(icon_username, 200.0);
         icon_username.setFitHeight(30.0);
         icon_username.setFitWidth(30.0);
-        icon_username.setLayoutX(204.0);
-        icon_username.setLayoutY(149.0);
+        icon_username.setLayoutY(119.0);
         icon_username.setPickOnBounds(true);
         icon_username.setPreserveRatio(true);
+        
+        AnchorPane.setLeftAnchor(icon_diaplayname, 200.0);
+        AnchorPane.setRightAnchor(icon_diaplayname, 200.0);
+        icon_diaplayname.setFitHeight(27.0);
+        icon_diaplayname.setFitWidth(27.0);
+        icon_diaplayname.setLayoutY(170.0);
+        icon_diaplayname.setPickOnBounds(true);
+        icon_diaplayname.setPreserveRatio(true);
 
         AnchorPane.setLeftAnchor(icon_password, 200.0);
         AnchorPane.setRightAnchor(icon_password, 200.0);
         icon_password.setFitHeight(30.0);
         icon_password.setFitWidth(30.0);
-        icon_password.setLayoutX(204.0);
-        icon_password.setLayoutY(205.0);
+        icon_password.setLayoutY(220.0);
         icon_password.setPickOnBounds(true);
         icon_password.setPreserveRatio(true);
 
@@ -150,8 +172,7 @@ public class RegisterScreen extends AnchorPane {
         AnchorPane.setRightAnchor(icon_confirm_password, 197.0);
         icon_confirm_password.setFitHeight(30.0);
         icon_confirm_password.setFitWidth(30.0);
-        icon_confirm_password.setLayoutX(204.0);
-        icon_confirm_password.setLayoutY(259.0);
+        icon_confirm_password.setLayoutY(270.0);
         icon_confirm_password.setPickOnBounds(true);
         icon_confirm_password.setPreserveRatio(true);
 
@@ -164,12 +185,14 @@ public class RegisterScreen extends AnchorPane {
 
         getChildren().add(img_background);
         getChildren().add(tv_username);
+        getChildren().add(tv_displayname);
         getChildren().add(tv_password);
         getChildren().add(tv_confirm_password);
         getChildren().add(btn_register);
         getChildren().add(txt_signIn);
         getChildren().add(icon_register);
         getChildren().add(icon_username);
+        getChildren().add(icon_diaplayname);
         getChildren().add(icon_password);
         getChildren().add(icon_confirm_password);
         getChildren().add(icon_back);
@@ -183,10 +206,48 @@ public class RegisterScreen extends AnchorPane {
             @Override
             public void handle(ActionEvent event) {
                 validation();
-                PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(currentStage);
-                navigate(playOnlineScreen);
-            }
-        });
+
+                String userName = tv_username.getText();
+                String displayname=tv_displayname.getText();
+                String password = tv_password.getText();
+
+                JsonObject jsonObject = new JsonObject();
+                JsonObject signupObject = new JsonObject();
+                JsonObject requestData = new JsonObject();
+                signupObject.addProperty("username", userName);
+                signupObject.addProperty("displayname", displayname);
+                signupObject.addProperty("password", password);
+                requestData.addProperty("request", "SIGNUP");
+                jsonObject.add("data", signupObject);
+                jsonObject.add("request", requestData);
+                String jsonString = jsonObject.toString();
+                         Socket socket ;
+                         PrintWriter out=null ;
+                         OutputStream  outPutStream=null  ;
+                try {
+                     socket = new Socket("192.168.1.6", 5005);
+                     outPutStream = socket.getOutputStream();
+                      out = new PrintWriter(outPutStream,true);
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }      
+
+
+                out.println(jsonString);
+
+                        try {
+                            outPutStream.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    ComputerGameBoardScreen computerBoard = new ComputerGameBoardScreen(currentStage);
+                    navigate(computerBoard);
+                    }
+                });
+
+                
+       
 
         txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
