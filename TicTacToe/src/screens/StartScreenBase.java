@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import tictactoe.Navigation;
+import tictactoe.ServerConnection;
 
 public class StartScreenBase extends AnchorPane {
 
@@ -24,6 +26,7 @@ public class StartScreenBase extends AnchorPane {
     protected final ImageView logoImage;
     protected final Text text;
     protected Stage currentStage;
+    private String serverIP;
 
     public StartScreenBase(Stage primaryStage) {
 
@@ -86,7 +89,7 @@ public class StartScreenBase extends AnchorPane {
             @Override
             public void handle(MouseEvent event) {
                 OfflineScreenBase offlineScreen = new OfflineScreenBase(currentStage);
-                Navigation.getInstance().navigate(offlineScreen,currentStage);
+                Navigation.getInstance().navigate(offlineScreen, currentStage);
 
             }
         });
@@ -96,7 +99,13 @@ public class StartScreenBase extends AnchorPane {
             public void handle(MouseEvent event) {
                 try {
                     LoginScreen loginScreen = new LoginScreen(currentStage);
-                    Navigation.getInstance().navigate(loginScreen,currentStage);
+                    if (!ServerConnection.getConnectionState()) {
+                        serverIP = IPAlertDialog.display();
+                        ServerConnection.getInstance().setUpConnection(serverIP);
+                        Navigation.getInstance().navigate(loginScreen, currentStage);
+                    } else {
+                        Navigation.getInstance().navigate(loginScreen, currentStage);
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(StartScreenBase.class.getName()).log(Level.SEVERE, null, ex);
                 }

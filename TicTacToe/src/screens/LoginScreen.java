@@ -210,7 +210,6 @@ public class LoginScreen extends AnchorPane {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        ServerConnection.getInstance().setUpConnection("10.145.4.253");
                         if (ServerConnection.getConnectionState()) {
                             ServerConnection.getInstance().getPrintStream().println(jsonString);
                         }
