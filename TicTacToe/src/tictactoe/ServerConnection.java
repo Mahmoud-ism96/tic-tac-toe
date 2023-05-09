@@ -22,7 +22,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import screens.LoginScreen;
+import screens.PlayOnlineScreen;
 
 public final class ServerConnection {
 
@@ -33,6 +36,7 @@ public final class ServerConnection {
     private PrintStream printStream;
     private BufferedReader bufferedReader;
     private DataInputStream inputStream;
+    private static Stage mainStage;
 
     private ServerConnection() {
     }
@@ -79,24 +83,21 @@ public final class ServerConnection {
                 requestHandler();
             }
         } catch (SocketException ex) {
-            JOptionPane.showMessageDialog(null, "Socket exception occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println("ABC");
-            connectionState = false;
-            failedToConnect();
+            failedToConnect("Couldn't Connect to Server.");
             closeConnection();
         } catch (IOException ex) {
             Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void failedToConnect() {
+    public void failedToConnect(String errMsg) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
-                alert.setContentText("Couldn't Connect to Server.");
+                alert.setContentText(errMsg);
                 alert.showAndWait();
             }
         });
@@ -113,12 +114,13 @@ public final class ServerConnection {
             if (this.inputStream != null) {
                 this.outPutStream.close();
             }
-            if (this.serverSocket != null) {
-                this.serverSocket.close();
-            }
             if (this.bufferedReader != null) {
                 this.bufferedReader.close();
             }
+            if (this.serverSocket != null) {
+                this.serverSocket.close();
+            }
+            connectionState = false;
         } catch (IOException ex) {
             Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -164,11 +166,15 @@ public final class ServerConnection {
         this.bufferedReader = bufferedReader;
     }
 
+    public static void updateStage(Stage stage) {
+        mainStage = stage;
+    }
+
     public void requestHandler() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                while (connectionState) {
                     try {
                         String jsonString = bufferedReader.readLine();
                         if (jsonString != null) {
@@ -181,7 +187,14 @@ public final class ServerConnection {
 
                         }
                     } catch (IOException ex) {
-                        closeConnection();
+                        try {
+                            closeConnection();
+                            LoginScreen playOnlineScreenx = new LoginScreen(mainStage);
+                            Navigation.getInstance().navigate(playOnlineScreenx, mainStage);
+                            failedToConnect("Connection Lost");
+                        } catch (IOException ex1) {
+                            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
 
                     } catch (SQLException ex) {
                         closeConnection();

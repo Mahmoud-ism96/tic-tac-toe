@@ -215,6 +215,7 @@ public class LoginScreen extends AnchorPane {
                         }
                         PlayOnlineScreen playOnlineScreenx = new PlayOnlineScreen(currentStage);
                         if (ServerConnection.getConnectionState()) {
+                            ServerConnection.getInstance().updateStage(currentStage);
                             Navigation.getInstance().navigate(playOnlineScreenx, currentStage);
                         }
                     }
