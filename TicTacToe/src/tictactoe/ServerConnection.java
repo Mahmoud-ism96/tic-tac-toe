@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import screens.LoginScreen;
 import screens.PlayOnlineScreen;
+import screens.PlayerVSPlayerBoardScreen;
 import screens.StartScreenBase;
 
 public final class ServerConnection {
@@ -235,6 +236,9 @@ public final class ServerConnection {
         if (response.equals("success")) {
             PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
             Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
+//            Player.getInstance().setDisplayName();
+//            Player.getInstance().setTotalScore();
+//            Player.getInstance().getUserName();
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Login Data");
         }
@@ -246,9 +250,18 @@ public final class ServerConnection {
         if (response.equals("success")) {
             PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
             Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
+//            Player.getInstance().setDisplayName();
+//            Player.getInstance().setTotalScore();
+//            Player.getInstance().getUserName();
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Registration Data");
         }
+    }
+
+    private void incomingMoveRequest(JsonObject jsonObject) {
+        String response = jsonObject.get("response").getAsString();
+        int move = 0;
+        PlayerVSPlayerBoardScreen.updateBoard(move);
     }
 
     public void parseSignIn(String username, String password) {
@@ -261,6 +274,7 @@ public final class ServerConnection {
         jsonObject.add("data", signinObject);
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
+
         printStream.println(jsonString);
     }
 
@@ -276,7 +290,7 @@ public final class ServerConnection {
         jsonObject.add("data", signupObject);
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
-        
+
         printStream.println(jsonString);
     }
 
