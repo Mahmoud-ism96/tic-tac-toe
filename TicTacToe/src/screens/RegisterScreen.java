@@ -210,7 +210,7 @@ public class RegisterScreen extends AnchorPane {
                 String userName = tv_username.getText();
                 String displayname=tv_displayname.getText();
                 String password = tv_password.getText();
-
+                
                 JsonObject jsonObject = new JsonObject();
                 JsonObject signupObject = new JsonObject();
                 JsonObject requestData = new JsonObject();
@@ -225,7 +225,7 @@ public class RegisterScreen extends AnchorPane {
                          PrintWriter out=null ;
                          OutputStream  outPutStream=null  ;
                 try {
-                     socket = new Socket("192.168.1.6", 5005);
+                     socket = new Socket("10.145.4.248", 5005);
                      outPutStream = socket.getOutputStream();
                       out = new PrintWriter(outPutStream,true);
                 } catch (IOException ex) {
@@ -281,6 +281,7 @@ public class RegisterScreen extends AnchorPane {
         String name = tv_username.getText();
         String password = tv_password.getText();
         String confirmPassword = tv_confirm_password.getText();
+        String displayname=tv_displayname.getText();
 
         if (name.length() < 6 && name.isEmpty()) {
             Alert alert = new Alert(AlertType.ERROR);
@@ -302,7 +303,14 @@ public class RegisterScreen extends AnchorPane {
             alert.setHeaderText(null);
             alert.setContentText("Password and confirmation password do not match");
             alert.showAndWait();
-        } else {
+        } else if(displayname.length() < 3 && displayname.isEmpty()){
+             Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Display Name should be at least 3 characters long");
+            alert.showAndWait();
+
+            
 
         }
     }

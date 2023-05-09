@@ -214,7 +214,7 @@ public class LoginScreen extends AnchorPane {
                  PrintWriter out=null ;
                  OutputStream  outPutStream=null  ;
         try {
-             socket = new Socket("192.168.100.7", 5005);
+             socket = new Socket("10.145.4.248", 5005);
              outPutStream = socket.getOutputStream();
               out = new PrintWriter(outPutStream,true);
         } catch (IOException ex) {
