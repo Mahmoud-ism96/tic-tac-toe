@@ -7,21 +7,15 @@ package screens;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-/**
- *
- * @author Mahmoud Ism
- */
 public class IPAlertDialog {
 
     static String serverIP;
@@ -39,7 +33,6 @@ public class IPAlertDialog {
         });
 
         Label label1 = new Label("Enter Server IP ");
-        Label label2 = new Label("IP:");
 
         GridPane layout = new GridPane();
 
@@ -50,7 +43,6 @@ public class IPAlertDialog {
         layout.add(text1, 1, 1);
         layout.add(button, 1, 3);
         layout.add(label1, 1, 0);
-        layout.add(label2, 0, 1);
         
         GridPane.setHalignment(label1, HPos.CENTER);
         GridPane.setValignment(label1, VPos.CENTER);
@@ -58,7 +50,7 @@ public class IPAlertDialog {
         GridPane.setValignment(button, VPos.CENTER);
         
 
-        Scene scene = new Scene(layout, 190, 110);
+        Scene scene = new Scene(layout, 190, 120);
         stage.setTitle("IP");
         stage.setScene(scene);
         stage.showAndWait();

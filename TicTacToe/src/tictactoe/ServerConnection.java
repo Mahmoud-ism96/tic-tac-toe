@@ -5,21 +5,25 @@
  */
 package tictactoe;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import javax.swing.JOptionPane;
 
-/**
- *
- * @author Mahmoud Ism
- */
 public final class ServerConnection {
 
     private static ServerConnection INSTANCE;
@@ -27,6 +31,7 @@ public final class ServerConnection {
     private Socket serverSocket;
     private OutputStream outPutStream;
     private PrintStream printStream;
+    private BufferedReader bufferedReader;
     private DataInputStream inputStream;
 
     private ServerConnection() {
@@ -60,16 +65,27 @@ public final class ServerConnection {
         }
     }
 
+    // TODO : FIX THE UNEXPECTED DISCONNECT EXCEPTION
     public void setUpConnection(String serverIP) {
 
         try {
-            this.serverSocket = new Socket(serverIP, 5005);
-            this.outPutStream = serverSocket.getOutputStream();
-            this.printStream = new PrintStream(outPutStream, true);
-            connectionState = true;
-        } catch (IOException ex) {
+            if (serverIP != null) {
+                this.serverSocket = new Socket(serverIP, 5005);
+                this.outPutStream = serverSocket.getOutputStream();
+                this.inputStream = new DataInputStream(serverSocket.getInputStream());
+                this.printStream = new PrintStream(outPutStream, true);
+                this.bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
+                connectionState = true;
+                requestHandler();
+            }
+        } catch (SocketException ex) {
+            JOptionPane.showMessageDialog(null, "Socket exception occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("ABC");
+            connectionState = false;
             failedToConnect();
             closeConnection();
+        } catch (IOException ex) {
+            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -94,8 +110,14 @@ public final class ServerConnection {
             if (this.outPutStream != null) {
                 this.outPutStream.close();
             }
+            if (this.inputStream != null) {
+                this.outPutStream.close();
+            }
             if (this.serverSocket != null) {
                 this.serverSocket.close();
+            }
+            if (this.bufferedReader != null) {
+                this.bufferedReader.close();
             }
         } catch (IOException ex) {
             Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,6 +153,86 @@ public final class ServerConnection {
             this.inputStream = new DataInputStream(serverSocket.getInputStream());
         } catch (IOException ex) {
             Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public BufferedReader getBufferedReader() {
+        return bufferedReader;
+    }
+
+    public void setBufferedReader(BufferedReader bufferedReader) {
+        this.bufferedReader = bufferedReader;
+    }
+
+    public void requestHandler() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        String jsonString = bufferedReader.readLine();
+                        if (jsonString != null) {
+
+                            Gson gson = new Gson();
+                            JsonElement jsonElement = gson.fromJson(jsonString, JsonElement.class);
+                            JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+                            handleRequest(jsonObject);
+
+                        }
+                    } catch (IOException ex) {
+                        closeConnection();
+
+                    } catch (SQLException ex) {
+                        closeConnection();
+                    }
+                }
+            }
+        }).start();
+
+    }
+
+    private void handleRequest(JsonObject jsonObject) throws SQLException {
+
+        JsonElement requestElement = jsonObject.get("request");
+        JsonObject requestObject = requestElement.getAsJsonObject();
+        String request = requestObject.get("request").getAsString();
+
+        switch (request) {
+            case "SIGNIN": {
+                signInRequest(jsonObject);
+            }
+            break;
+            case "SIGNUP": {
+                signUpRequest(jsonObject);
+            }
+            break;
+            case "INCOMING MOVE": {
+            }
+            break;
+            case "PLAYER LEFT": {
+            }
+            break;
+            case "GAME REQUEST": {
+            }
+            break;
+        }
+
+    }
+
+    private void signInRequest(JsonObject jsonObject) {
+        String response = jsonObject.get("response").getAsString();
+
+        if (response.equals("success")) {
+        } else if (response.equals("fail")) {
+        }
+    }
+
+    private void signUpRequest(JsonObject jsonObject) {
+        String response = jsonObject.get("response").getAsString();
+
+        if (response.equals("success")) {
+        } else if (response.equals("fail")) {
         }
     }
 
