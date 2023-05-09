@@ -23,6 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tictactoe.Navigation;
+import tictactoe.ServerConnection;
 
 public class RegisterScreen extends AnchorPane {
 
@@ -35,7 +36,7 @@ public class RegisterScreen extends AnchorPane {
     public final Text txt_signIn;
     protected final ImageView icon_register;
     protected final ImageView icon_username;
-     protected final ImageView icon_diaplayname;
+    protected final ImageView icon_diaplayname;
     protected final ImageView icon_password;
     protected final ImageView icon_confirm_password;
     public ImageView icon_back;
@@ -62,7 +63,7 @@ public class RegisterScreen extends AnchorPane {
         btn_register = new Button();
         txt_signIn = new Text();
         icon_register = new ImageView();
-        icon_diaplayname=new ImageView();
+        icon_diaplayname = new ImageView();
         icon_username = new ImageView();
         icon_password = new ImageView();
         icon_confirm_password = new ImageView();
@@ -96,13 +97,13 @@ public class RegisterScreen extends AnchorPane {
         img_background.setFitWidth(600.0);
         img_background.setPickOnBounds(true);
         img_background.setPreserveRatio(true);
-        
+
         AnchorPane.setLeftAnchor(tv_username, 230.0);
         AnchorPane.setRightAnchor(tv_username, 230.0);
         tv_username.setLayoutY(120.0);
         tv_username.setPromptText("username");
         tv_username.setStyle("-fx-border-color: BLACK;");
-        
+
         AnchorPane.setLeftAnchor(tv_displayname, 230.0);
         AnchorPane.setRightAnchor(tv_displayname, 230.0);
         tv_displayname.setLayoutY(170.0);
@@ -152,7 +153,7 @@ public class RegisterScreen extends AnchorPane {
         icon_username.setLayoutY(119.0);
         icon_username.setPickOnBounds(true);
         icon_username.setPreserveRatio(true);
-        
+
         AnchorPane.setLeftAnchor(icon_diaplayname, 200.0);
         AnchorPane.setRightAnchor(icon_diaplayname, 200.0);
         icon_diaplayname.setFitHeight(27.0);
@@ -208,47 +209,13 @@ public class RegisterScreen extends AnchorPane {
             public void handle(ActionEvent event) {
                 validation();
 
-                String userName = tv_username.getText();
-                String displayname=tv_displayname.getText();
+                String username = tv_username.getText();
+                String displayname = tv_displayname.getText();
                 String password = tv_password.getText();
 
-                JsonObject jsonObject = new JsonObject();
-                JsonObject signupObject = new JsonObject();
-                JsonObject requestData = new JsonObject();
-                signupObject.addProperty("username", userName);
-                signupObject.addProperty("displayname", displayname);
-                signupObject.addProperty("password", password);
-                requestData.addProperty("request", "SIGNUP");
-                jsonObject.add("data", signupObject);
-                jsonObject.add("request", requestData);
-                String jsonString = jsonObject.toString();
-                         Socket socket ;
-                         PrintWriter out=null ;
-                         OutputStream  outPutStream=null  ;
-                try {
-                     socket = new Socket("192.168.1.6", 5005);
-                     outPutStream = socket.getOutputStream();
-                      out = new PrintWriter(outPutStream,true);
-                } catch (IOException ex) {
-                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
-                }      
-
-
-                out.println(jsonString);
-
-                        try {
-                            outPutStream.close();
-                        } catch (IOException ex) {
-                            Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                    ComputerGameBoardScreen computerBoard = new ComputerGameBoardScreen(currentStage);
-                    Navigation.getInstance().navigate(computerBoard, currentStage);
-                    }
-                });
-
-                
-       
+                ServerConnection.getInstance().parseSignIn(username, password);
+            }
+        });
 
         txt_signIn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
@@ -269,6 +236,7 @@ public class RegisterScreen extends AnchorPane {
             }
         });
     }
+
     public void validation() {
 
         String name = tv_username.getText();

@@ -197,29 +197,8 @@ public class LoginScreen extends AnchorPane {
                 userName = tv_username.getText();
                 password = tv_password.getText();
 
-                JsonObject jsonObject = new JsonObject();
-                JsonObject signinObject = new JsonObject();
-                JsonObject requestData = new JsonObject();
-                signinObject.addProperty("username", userName);
-                signinObject.addProperty("password", password);
-                requestData.addProperty("request", "SIGNIN");
-                jsonObject.add("data", signinObject);
-                jsonObject.add("request", requestData);
-                String jsonString = jsonObject.toString();
+                ServerConnection.getInstance().parseSignIn(userName, password);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (ServerConnection.getConnectionState()) {
-                            ServerConnection.getInstance().getPrintStream().println(jsonString);
-                        }
-                        PlayOnlineScreen playOnlineScreenx = new PlayOnlineScreen(currentStage);
-                        if (ServerConnection.getConnectionState()) {
-                            ServerConnection.getInstance().updateStage(currentStage);
-                            Navigation.getInstance().navigate(playOnlineScreenx, currentStage);
-                        }
-                    }
-                }).start();
             }
         });
 

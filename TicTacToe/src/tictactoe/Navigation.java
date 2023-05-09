@@ -25,7 +25,7 @@ public final class Navigation {
 
         return INSTANCE;
     }
-
+    //TODO: Update Navigation with TicTacToe.getCurrentStage();
     public void navigate(Parent screen, Stage currentStage) {
         Platform.runLater(new Runnable() {
             @Override

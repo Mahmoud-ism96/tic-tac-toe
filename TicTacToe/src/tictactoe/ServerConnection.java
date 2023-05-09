@@ -17,15 +17,18 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import screens.LoginScreen;
 import screens.PlayOnlineScreen;
+import screens.StartScreenBase;
 
 public final class ServerConnection {
 
@@ -36,7 +39,6 @@ public final class ServerConnection {
     private PrintStream printStream;
     private BufferedReader bufferedReader;
     private DataInputStream inputStream;
-    private static Stage mainStage;
 
     private ServerConnection() {
     }
@@ -74,19 +76,25 @@ public final class ServerConnection {
 
         try {
             if (serverIP != null) {
-                this.serverSocket = new Socket(serverIP, 5005);
-                this.outPutStream = serverSocket.getOutputStream();
-                this.inputStream = new DataInputStream(serverSocket.getInputStream());
-                this.printStream = new PrintStream(outPutStream, true);
-                this.bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
-                connectionState = true;
-                requestHandler();
+                if (!serverIP.isEmpty()) {
+                    this.serverSocket = new Socket(serverIP, 5005);
+                    this.outPutStream = serverSocket.getOutputStream();
+                    this.inputStream = new DataInputStream(serverSocket.getInputStream());
+                    this.printStream = new PrintStream(outPutStream, true);
+                    this.bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
+                    connectionState = true;
+                    requestHandler();
+                }
             }
         } catch (SocketException ex) {
             failedToConnect("Couldn't Connect to Server.");
             closeConnection();
+        } catch (UnknownHostException ex) {
+            failedToConnect("Couldn't Connect to Server.");
+            closeConnection();
         } catch (IOException ex) {
-            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+            failedToConnect("Couldn't Connect to Server.");
+            closeConnection();
         }
     }
 
@@ -166,10 +174,6 @@ public final class ServerConnection {
         this.bufferedReader = bufferedReader;
     }
 
-    public static void updateStage(Stage stage) {
-        mainStage = stage;
-    }
-
     public void requestHandler() {
         new Thread(new Runnable() {
             @Override
@@ -178,24 +182,16 @@ public final class ServerConnection {
                     try {
                         String jsonString = bufferedReader.readLine();
                         if (jsonString != null) {
-
                             Gson gson = new Gson();
                             JsonElement jsonElement = gson.fromJson(jsonString, JsonElement.class);
                             JsonObject jsonObject = jsonElement.getAsJsonObject();
-
                             handleRequest(jsonObject);
-
                         }
                     } catch (IOException ex) {
-                        try {
-                            closeConnection();
-                            LoginScreen playOnlineScreenx = new LoginScreen(mainStage);
-                            Navigation.getInstance().navigate(playOnlineScreenx, mainStage);
-                            failedToConnect("Connection Lost");
-                        } catch (IOException ex1) {
-                            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex1);
-                        }
-
+                        closeConnection();
+                        StartScreenBase loginScreen = new StartScreenBase(TicTacToe.getCurrentStage());
+                        Navigation.getInstance().navigate(loginScreen, TicTacToe.getCurrentStage());
+                        failedToConnect("Connection Lost");
                     } catch (SQLException ex) {
                         closeConnection();
                     }
@@ -237,7 +233,10 @@ public final class ServerConnection {
         String response = jsonObject.get("response").getAsString();
 
         if (response.equals("success")) {
+            PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
+            Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
         } else if (response.equals("fail")) {
+            failedToConnect("Wrong Login Data");
         }
     }
 
@@ -245,8 +244,40 @@ public final class ServerConnection {
         String response = jsonObject.get("response").getAsString();
 
         if (response.equals("success")) {
+            PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
+            Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
         } else if (response.equals("fail")) {
+            failedToConnect("Wrong Registration Data");
         }
+    }
+
+    public void parseSignIn(String username, String password) {
+        JsonObject jsonObject = new JsonObject();
+        JsonObject signinObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        signinObject.addProperty("username", username);
+        signinObject.addProperty("password", password);
+        requestData.addProperty("request", "SIGNIN");
+        jsonObject.add("data", signinObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+        printStream.println(jsonString);
+    }
+
+    public void parseSignUp(String username, String displayname, String password) {
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject signupObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        signupObject.addProperty("username", username);
+        signupObject.addProperty("displayname", displayname);
+        signupObject.addProperty("password", password);
+        requestData.addProperty("request", "SIGNUP");
+        jsonObject.add("data", signupObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+        
+        printStream.println(jsonString);
     }
 
 }
