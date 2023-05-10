@@ -1,7 +1,11 @@
 package screens;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -192,36 +196,68 @@ public class LoginScreen extends AnchorPane {
             }
         });
         btn_login.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                userName = tv_username.getText();
-                password = tv_password.getText();
+    @Override
+    public void handle(MouseEvent event) {
+        userName = tv_username.getText();
+        password = tv_password.getText();
 
-                JsonObject jsonObject = new JsonObject();
-                JsonObject signinObject = new JsonObject();
-                JsonObject requestData = new JsonObject();
-                signinObject.addProperty("username", userName);
-                signinObject.addProperty("password", password);
-                requestData.addProperty("request", "SIGNIN");
-                jsonObject.add("data", signinObject);
-                jsonObject.add("request", requestData);
-                String jsonString = jsonObject.toString();
+        JsonObject jsonObject = new JsonObject();
+        JsonObject signinObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        signinObject.addProperty("username", userName);
+        signinObject.addProperty("password", password);
+        requestData.addProperty("request", "SIGNIN");
+        
+        jsonObject.add("data", signinObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
 
-                new Thread(new Runnable() {
+        if (ServerConnection.getConnectionState()) {
+            
+            ServerConnection.getInstance().getPrintStream().println(jsonString);
+            
+            try {
+            InputStream inputStream = ServerConnection.getInstance().getInputStream();
+            if (inputStream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String responseString = reader.readLine();
+                JsonObject response = JsonParser.parseString(responseString).getAsJsonObject();
+                String responseType = response.get("response").getAsString();
+
+                if (responseType.equals("SUCCESS")) {
+                  
+                Platform.runLater(new Runnable() {
                     @Override
-                    public void run() {
-                        if (ServerConnection.getConnectionState()) {
-                            ServerConnection.getInstance().getPrintStream().println(jsonString);
-                        }
-                        PlayOnlineScreen playOnlineScreenx = new PlayOnlineScreen(currentStage);
-                        if (ServerConnection.getConnectionState()) {
-                            Navigation.getInstance().navigate(playOnlineScreenx, currentStage);
-                        }
+                        public void run() {
+                        PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(currentStage);
+                        Navigation.getInstance().navigate(playOnlineScreen, currentStage);
+
+                        System.out.println("Response received: " + responseString);
+                        System.out.println("Response type: " + responseType);
                     }
-                }).start();
+                        });
+                    } else {
+                        
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Login Error");
+                                alert.setHeaderText("Login Failed");
+                                alert.setContentText("Invalid username or password");
+                                alert.showAndWait();
+                            }
+                        });
+                    }
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        });
-
+        }
     }
-
+});
 }
+}
+
+
