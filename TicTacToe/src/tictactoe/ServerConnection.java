@@ -235,10 +235,18 @@ public final class ServerConnection {
 
         if (response.equals("success")) {
             PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
-            Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
-//            Player.getInstance().setDisplayName();
-//            Player.getInstance().setTotalScore();
-//            Player.getInstance().getUserName();
+            Navigation.getInstance().
+                    navigate(playOnlineScreen, TicTacToe.getCurrentStage());
+
+            JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
+            String displayName = jsonData.get("displayName").getAsString();
+            int totalScore = jsonData.get("totalScore").getAsInt();
+            int userId = jsonData.get("USER_ID").getAsInt();
+
+            Player.getInstance().setDisplayName(displayName);
+            Player.getInstance().setTotalScore(totalScore);
+            Player.getInstance().setUserName(userId);
+
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Login Data");
         }
@@ -250,9 +258,15 @@ public final class ServerConnection {
         if (response.equals("success")) {
             PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
             Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
-//            Player.getInstance().setDisplayName();
-//            Player.getInstance().setTotalScore();
-//            Player.getInstance().getUserName();
+            JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
+            String displayName = jsonData.get("displayName").getAsString();
+            int totalScore = jsonData.get("totalScore").getAsInt();
+            int userId = jsonData.get("USER_ID").getAsInt();
+
+            Player.getInstance().setDisplayName(displayName);
+            Player.getInstance().setTotalScore(totalScore);
+            Player.getInstance().setUserName(userId);
+
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Registration Data");
         }
