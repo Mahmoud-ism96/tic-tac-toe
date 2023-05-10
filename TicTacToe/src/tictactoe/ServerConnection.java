@@ -241,7 +241,7 @@ public final class ServerConnection {
             JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
             String displayName = jsonData.get("displayName").getAsString();
             int totalScore = jsonData.get("totalScore").getAsInt();
-            int userId = jsonData.get("USER_ID").getAsInt();
+            String userId = jsonData.get("USER_ID").getAsString();
 
             Player.getInstance().setDisplayName(displayName);
             Player.getInstance().setTotalScore(totalScore);
@@ -261,7 +261,7 @@ public final class ServerConnection {
             JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
             String displayName = jsonData.get("displayName").getAsString();
             int totalScore = jsonData.get("totalScore").getAsInt();
-            int userId = jsonData.get("USER_ID").getAsInt();
+            String userId = jsonData.get("USER_ID").getAsString();
 
             Player.getInstance().setDisplayName(displayName);
             Player.getInstance().setTotalScore(totalScore);
