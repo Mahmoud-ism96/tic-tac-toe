@@ -123,6 +123,14 @@ public class PlayOnlineScreen extends AnchorPane {
                 Navigation.getInstance().navigate(offlineScreen, currentStage);
             }
         });
+        
+        playOnlineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                OnlinePlayerListScreenBase OnlinePlayerListScreen = new OnlinePlayerListScreenBase(currentStage);
+                Navigation.getInstance().navigate(OnlinePlayerListScreen, currentStage);
+            }
+        });
     }
 
 }
