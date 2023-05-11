@@ -19,6 +19,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -30,6 +31,14 @@ import screens.LoginScreen;
 import screens.PlayOnlineScreen;
 import screens.PlayerVSPlayerBoardScreen;
 import screens.StartScreenBase;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public final class ServerConnection {
 
@@ -40,6 +49,15 @@ public final class ServerConnection {
     private PrintStream printStream;
     private BufferedReader bufferedReader;
     private DataInputStream inputStream;
+    private List<PlayerData> allPlayers;
+
+    public List<PlayerData> getAllPlayers() {
+        return allPlayers;
+    }
+
+    public void setAllPlayers(List<PlayerData> allPlayers) {
+        this.allPlayers = allPlayers;
+    }
 
     private ServerConnection() {
     }
@@ -223,6 +241,12 @@ public final class ServerConnection {
             break;
             case "PLAYER LEFT": {
             }
+
+            break;
+            case "ONLINEPLAYERLIST": {
+                allPlayers = getAllPlayers(jsonObject);
+
+            }
             break;
             case "GAME REQUEST": {
             }
@@ -283,6 +307,18 @@ public final class ServerConnection {
         PlayerVSPlayerBoardScreen.updateBoard(move);
     }
 
+    private List<PlayerData> getAllPlayers(JsonObject jsonObject) {
+        JsonObject json = jsonObject.get("data").getAsJsonObject();
+        JsonArray playersArray = json.get("players").getAsJsonArray();
+
+        Gson gson = new Gson();
+        Type playerDataType = new TypeToken<List<PlayerData>>() {
+        }.getType();
+        List<PlayerData> playerDataList = gson.fromJson(playersArray, playerDataType);
+
+        return playerDataList;
+    }
+
     public void parseSignIn(String username, String password) {
         JsonObject jsonObject = new JsonObject();
         JsonObject signinObject = new JsonObject();
@@ -314,13 +350,23 @@ public final class ServerConnection {
     }
 
     public void parseSignOut() {
-        
+
         JsonObject jsonObject = new JsonObject();
         JsonObject requestData = new JsonObject();
         requestData.addProperty("request", "SIGNOUT");
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
 
+        printStream.println(jsonString);
+    }
+
+    public void parsePlayerList() {
+        String request = "ONLINEPLAYERLIST";
+        JsonObject jsonObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        requestData.addProperty("request", request);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
         printStream.println(jsonString);
     }
 
