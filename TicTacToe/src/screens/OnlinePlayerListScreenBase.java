@@ -3,6 +3,7 @@ package screens;
 import com.google.gson.JsonObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -22,11 +24,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import tictactoe.Navigation;
 import tictactoe.ServerConnection;
 
 public class OnlinePlayerListScreenBase extends AnchorPane {
 
-     static class Player {
+    static class Player {
+
         private String name;
         private int score;
 
@@ -59,11 +63,10 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
     protected Image img_back;
     protected final ImageView logoImage;
     protected final Text text;
-   OnlinePlayerListScreenBase(Stage currentStage){
-       
-        // Create some Player objects
+
+    OnlinePlayerListScreenBase(Stage currentStage) {
+
         players = FXCollections.observableArrayList(
-                
                 new Player("Alice", 100),
                 new Player("Bob", 200),
                 new Player("Charlie", 300),
@@ -71,61 +74,29 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
                 new Player("Eve", 500)
         );
 
-         // Create a ListView with a custom cell factory
         listView = new ListView<>(players);
         listView.setPrefWidth(400);
-      listView.setCellFactory(new Callback<ListView<Player>, ListCell<Player>>() {
-    @Override
-    public ListCell<Player> call(ListView<Player> listView) {
-        return new ListCell<Player>() {
-            @Override
-            protected void updateItem(Player player, boolean empty) {
-                super.updateItem(player, empty);
-                if (player != null) {
-                    // Create an HBox to hold the Label and Button objects
-                    HBox hbox = new HBox();
-                    hbox.setStyle("-fx-background-color: #ECEBE4;"); // set background color to beige
-                    Label nameLabel = new Label(player.getName());
-                    Button button = new Button("Request");
-                  nameLabel.setPrefWidth(100);
-                    hbox.getChildren().addAll(nameLabel, button);
-                    hbox.setAlignment(Pos.CENTER_LEFT); // set alignment to left
-                    hbox.setSpacing(260); // set spacing between Label and Button
-                    setGraphic(hbox);
-                } else {
-                    setGraphic(null);
-                }
-            }
-        };
-    }
-});
 
-        // Create a ScrollPane and add the ListView to it
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(listView);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
-
-        // Bind the prefWidth and prefHeight properties of the ScrollPane to the corresponding properties of the ListView
         scrollPane.prefWidthProperty().bind(listView.widthProperty());
         scrollPane.prefHeightProperty().bind(listView.heightProperty());
 
-        // Create an AnchorPane with a background image
         Image backgroundImage = new Image("/images/background.png");
         ImageView backgroundImageView = new ImageView(backgroundImage);
         backgroundImageView.fitWidthProperty().bind(this.widthProperty());
         backgroundImageView.fitHeightProperty().bind(this.heightProperty());
         AnchorPane anchorPane = new AnchorPane(backgroundImageView);
 
-        // Add the ScrollPane to the AnchorPane
         AnchorPane.setTopAnchor(scrollPane, 100.0);
         AnchorPane.setLeftAnchor(scrollPane, 50.0);
         AnchorPane.setRightAnchor(scrollPane, 50.0);
         AnchorPane.setBottomAnchor(scrollPane, 50.0);
         anchorPane.getChildren().add(scrollPane);
 
-        // Set the title of the AnchorPane
         logoImage = new ImageView();
         text = new Text();
         logoImage.setLayoutX(120.0);
@@ -144,34 +115,27 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
         anchorPane.getChildren().add(logoImage);
         anchorPane.getChildren().add(text);
 
-
-        // Add a button to the top left of the AnchorPane
-      
         icon_back = new ImageView();
-        img_back = new Image(getClass().getResourceAsStream("/images/back_button.png"));
-        icon_back.setImage(img_back);
         icon_back.setFitHeight(50.0);
         icon_back.setFitWidth(50.0);
         icon_back.setLayoutX(25.0);
         icon_back.setLayoutY(15.0);
         icon_back.setPickOnBounds(true);
         icon_back.setPreserveRatio(true);
+        icon_back.setImage(new Image(getClass().getResource("/images/back_button.png").toExternalForm()));
+
         anchorPane.getChildren().add(icon_back);
 
-     
-       // Set the preferred size of the AnchorPane
-       setPrefWidth(600);
+        setPrefWidth(600);
         setPrefHeight(400);
 
-        // Add the AnchorPane to the VBox
         getChildren().add(anchorPane);
         String request = "OnlinePlayersList";
-         JsonObject jsonObject = new JsonObject();
+        JsonObject jsonObject = new JsonObject();
         JsonObject requestData = new JsonObject();
         requestData.addProperty("request", request);
         jsonObject.add("request", requestData);
-    
-        
+
         String jsonString = jsonObject.toString();
         System.out.println(jsonString);
         new Thread(new Runnable() {
@@ -179,10 +143,20 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
             public void run() {
                 if (ServerConnection.getConnectionState()) {
                     ServerConnection.getInstance().getPrintStream().println(jsonString);
+
+                    showPlayerList();
                 }
 
             }
         }).start();
+
+        icon_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(currentStage);
+                Navigation.getInstance().navigate(playOnlineScreen, currentStage);
+            }
+        });
     }
 
     public ObservableList<Player> getPlayers() {
@@ -191,6 +165,38 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
 
     public ListView<Player> getListView() {
         return listView;
+    }
+
+    private void showPlayerList() {
+        listView.setCellFactory(new Callback<ListView<Player>, ListCell<Player>>() {
+            @Override
+            public ListCell<Player> call(ListView<Player> listView) {
+                return new ListCell<Player>() {
+                    @Override
+                    protected void updateItem(Player player, boolean empty) {
+                        super.updateItem(player, empty);
+                        if (player != null) {
+                            HBox hbox = new HBox();
+                            hbox.getStyleClass().add("hbox");
+                            hbox.setPrefHeight(40.0);
+                            Label nameLabel = new Label(player.getName());
+                            Button button = new Button("Request");
+                            button.getStyleClass().add("button");
+                            button.setStyle("-fx-font-size:12;");
+                            nameLabel.setPrefWidth(100);
+                            nameLabel.setStyle("-fx-fill: black;");
+                            hbox.getChildren().addAll(nameLabel, button);
+                            hbox.setAlignment(Pos.CENTER_LEFT);
+                            hbox.setSpacing(260);
+                            setGraphic(hbox);
+                        } else {
+                            setGraphic(null);
+                        }
+                    }
+                };
+            }
+        }
+        );
     }
 
 }

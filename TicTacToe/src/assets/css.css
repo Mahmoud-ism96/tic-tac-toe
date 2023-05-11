@@ -27,3 +27,12 @@
     -fx-border-width: 2;
     -fx-border-color:black;
 }
+
+.hbox {
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-background-color: #ECEBE4;
+    -fx-spacing: 260;
+    -fx-text-fill: black;
+}
