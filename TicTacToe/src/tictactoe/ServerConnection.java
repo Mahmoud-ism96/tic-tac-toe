@@ -185,7 +185,9 @@ public final class ServerConnection {
                         if (jsonString != null) {
                             Gson gson = new Gson();
                             JsonElement jsonElement = gson.fromJson(jsonString, JsonElement.class);
+                            System.out.println("JsonElement: " + jsonElement);
                             JsonObject jsonObject = jsonElement.getAsJsonObject();
+                            System.out.println("JsonObject: " + jsonObject);
                             handleRequest(jsonObject);
                         }
                     } catch (IOException ex) {
@@ -204,8 +206,7 @@ public final class ServerConnection {
 
     private void handleRequest(JsonObject jsonObject) throws SQLException {
 
-        JsonElement requestElement = jsonObject.get("request");
-        JsonObject requestObject = requestElement.getAsJsonObject();
+        JsonObject requestObject = jsonObject.get("request").getAsJsonObject();
         String request = requestObject.get("request").getAsString();
 
         switch (request) {
@@ -231,7 +232,8 @@ public final class ServerConnection {
     }
 
     private void signInRequest(JsonObject jsonObject) {
-        String response = jsonObject.get("response").getAsString();
+        JsonObject responseObject = jsonObject.get("response").getAsJsonObject();
+        String response = responseObject.get("response").getAsString();
 
         if (response.equals("success")) {
             PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
@@ -241,7 +243,7 @@ public final class ServerConnection {
             JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
             String displayName = jsonData.get("displayName").getAsString();
             int totalScore = jsonData.get("totalScore").getAsInt();
-            String userId = jsonData.get("USER_ID").getAsString();
+            String userId = jsonData.get("userId").getAsString();
 
             Player.getInstance().setDisplayName(displayName);
             Player.getInstance().setTotalScore(totalScore);
@@ -253,7 +255,9 @@ public final class ServerConnection {
     }
 
     private void signUpRequest(JsonObject jsonObject) {
-        String response = jsonObject.get("response").getAsString();
+        JsonElement responseElement = jsonObject.get("response");
+        JsonObject signUpObject = responseElement.getAsJsonObject();
+        String response = signUpObject.get("response").getAsString();
 
         if (response.equals("success")) {
             PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
@@ -261,7 +265,7 @@ public final class ServerConnection {
             JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
             String displayName = jsonData.get("displayName").getAsString();
             int totalScore = jsonData.get("totalScore").getAsInt();
-            String userId = jsonData.get("USER_ID").getAsString();
+            String userId = jsonData.get("userId").getAsString();
 
             Player.getInstance().setDisplayName(displayName);
             Player.getInstance().setTotalScore(totalScore);
@@ -304,6 +308,8 @@ public final class ServerConnection {
         jsonObject.add("data", signupObject);
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
+
+        System.out.println("Parser: " + jsonString);
 
         printStream.println(jsonString);
     }
