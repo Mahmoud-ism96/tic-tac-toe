@@ -14,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tictactoe.Navigation;
+import tictactoe.Player;
+import tictactoe.ServerConnection;
 
 public class PlayOnlineScreen extends AnchorPane {
 
@@ -23,6 +25,7 @@ public class PlayOnlineScreen extends AnchorPane {
     protected final ImageView logoImage;
     protected final Text text;
     protected final Text displayName;
+    protected final Text score;
     protected final Button gameHistoryBtn;
     protected final Button logoutBtn;
     protected Stage currentStage;
@@ -35,6 +38,7 @@ public class PlayOnlineScreen extends AnchorPane {
         logoImage = new ImageView();
         text = new Text();
         displayName = new Text();
+        score = new Text();
         gameHistoryBtn = new Button();
         logoutBtn = new Button();
         currentStage = primaryStage;
@@ -70,11 +74,16 @@ public class PlayOnlineScreen extends AnchorPane {
         text.setLayoutY(100.0);
         text.setStyle("-fx-font-size: 30; -fx-font-weight: bold;");
 
-        displayName.setText("Player 1");
+        score.setText("Score: " + Player.getInstance().getTotalScore());
+        score.setLayoutX(25);
+        score.setLayoutY(25);
+        score.setStyle("-fx-font-size: 18;");
+
+        displayName.setText(Player.getInstance().getDisplayName());
         displayName.setLayoutY(130.0);
         final double width = displayName.getLayoutBounds().getWidth();
         displayName.setLayoutX(300.0 - width);
-        
+
         System.err.println(width);
         displayName.setStyle("-fx-font-size: 30; -fx-font-weight: bold;");
 
@@ -101,6 +110,7 @@ public class PlayOnlineScreen extends AnchorPane {
         getChildren().add(logoImage);
         getChildren().add(text);
         getChildren().add(displayName);
+        getChildren().add(score);
         getChildren().add(gameHistoryBtn);
         getChildren().add(logoutBtn);
 
@@ -111,11 +121,12 @@ public class PlayOnlineScreen extends AnchorPane {
         logoutBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                ServerConnection.getInstance().parseSignOut();
                 StartScreenBase startScreen = new StartScreenBase(currentStage);
                 Navigation.getInstance().navigate(startScreen, currentStage);
             }
         });
-        
+
         playOfflineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -123,7 +134,7 @@ public class PlayOnlineScreen extends AnchorPane {
                 Navigation.getInstance().navigate(offlineScreen, currentStage);
             }
         });
-        
+
         playOnlineBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {

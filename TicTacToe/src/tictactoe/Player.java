@@ -29,19 +29,19 @@ public final class Player {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
     public int getTotalScore() {
-        return totalScore;
+        return this.totalScore;
     }
 
     public String getCurrentIP() {
-        return currentIP;
+        return this.currentIP;
     }
 
     public void setDisplayName(String displayName) {

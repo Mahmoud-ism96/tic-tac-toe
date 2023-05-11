@@ -212,7 +212,7 @@ public class RegisterScreen extends AnchorPane {
                 String username = tv_username.getText();
                 String displayname = tv_displayname.getText();
                 String password = tv_password.getText();
-
+                
                 ServerConnection.getInstance().parseSignUp(username, displayname, password);
             }
         });

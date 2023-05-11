@@ -236,10 +236,6 @@ public final class ServerConnection {
         String response = responseObject.get("response").getAsString();
 
         if (response.equals("success")) {
-            PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
-            Navigation.getInstance().
-                    navigate(playOnlineScreen, TicTacToe.getCurrentStage());
-
             JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
             String displayName = jsonData.get("displayName").getAsString();
             int totalScore = jsonData.get("totalScore").getAsInt();
@@ -248,6 +244,10 @@ public final class ServerConnection {
             Player.getInstance().setDisplayName(displayName);
             Player.getInstance().setTotalScore(totalScore);
             Player.getInstance().setUserName(userId);
+
+            PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
+            Navigation.getInstance().
+                    navigate(playOnlineScreen, TicTacToe.getCurrentStage());
 
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Login Data");
@@ -260,8 +260,6 @@ public final class ServerConnection {
         String response = signUpObject.get("response").getAsString();
 
         if (response.equals("success")) {
-            PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
-            Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
             JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
             String displayName = jsonData.get("displayName").getAsString();
             int totalScore = jsonData.get("totalScore").getAsInt();
@@ -270,6 +268,9 @@ public final class ServerConnection {
             Player.getInstance().setDisplayName(displayName);
             Player.getInstance().setTotalScore(totalScore);
             Player.getInstance().setUserName(userId);
+
+            PlayOnlineScreen playOnlineScreen = new PlayOnlineScreen(TicTacToe.getCurrentStage());
+            Navigation.getInstance().navigate(playOnlineScreen, TicTacToe.getCurrentStage());
 
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Registration Data");
@@ -309,7 +310,16 @@ public final class ServerConnection {
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
 
-        System.out.println("Parser: " + jsonString);
+        printStream.println(jsonString);
+    }
+
+    public void parseSignOut() {
+        
+        JsonObject jsonObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        requestData.addProperty("request", "SIGNOUT");
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
 
         printStream.println(jsonString);
     }
