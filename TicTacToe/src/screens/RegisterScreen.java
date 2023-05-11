@@ -207,13 +207,14 @@ public class RegisterScreen extends AnchorPane {
         btn_register.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                validation();
 
-                String username = tv_username.getText();
-                String displayname = tv_displayname.getText();
-                String password = tv_password.getText();
-                
-                ServerConnection.getInstance().parseSignUp(username, displayname, password);
+                if (validation()) {
+                    String username = tv_username.getText();
+                    String displayname = tv_displayname.getText();
+                    String password = tv_password.getText();
+
+                    ServerConnection.getInstance().parseSignUp(username, displayname, password);
+                }
             }
         });
 
@@ -238,11 +239,13 @@ public class RegisterScreen extends AnchorPane {
         });
     }
 
-    public void validation() {
+    public boolean validation() {
 
         String name = tv_username.getText();
         String password = tv_password.getText();
         String confirmPassword = tv_confirm_password.getText();
+
+        Boolean valid = false;
 
         if (name.length() < 6 && name.isEmpty()) {
             Alert alert = new Alert(AlertType.ERROR);
@@ -265,7 +268,8 @@ public class RegisterScreen extends AnchorPane {
             alert.setContentText("Password and confirmation password do not match");
             alert.showAndWait();
         } else {
-
+            valid = true;
         }
+        return valid;
     }
 }
