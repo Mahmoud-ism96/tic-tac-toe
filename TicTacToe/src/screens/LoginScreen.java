@@ -3,6 +3,7 @@ package screens;
 import java.io.IOException;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,7 +17,7 @@ import tictactoe.ServerConnection;
 public class LoginScreen extends AnchorPane {
 
     protected final TextField tv_username;
-    protected final TextField tv_password;
+    protected final PasswordField tv_password;
     protected final Button btn_login;
     protected final ImageView background;
     protected final ImageView icon_username;
@@ -62,7 +63,7 @@ public class LoginScreen extends AnchorPane {
         icon_back = new ImageView();
         txt_signUp = new Text();
         tv_username = new TextField();
-        tv_password = new TextField();
+        tv_password = new PasswordField();
         btn_login = new Button();
 
         img_user = new Image(getClass().getResourceAsStream("/images/user.png"));
