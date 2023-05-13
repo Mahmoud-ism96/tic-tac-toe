@@ -1,15 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package screens;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -26,21 +26,15 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tictactoe.Navigation;
-import tictactoe.Player;
-import tictactoe.ServerConnection;
-import tictactoe.TicTacToe;
 
-/**
- *
- * @author Mahmoud Ism
- */
-public class PlayerVSPlayerBoardScreen extends AnchorPane {
+public class ReplyGameScreen extends AnchorPane {
 
-    protected ImageView win_condition;
+    protected final ImageView win_condition;
     protected final ImageView imageView;
     protected final Text text_player_one;
-    public final ImageView btn_back;
     protected final Text text_player_two;
+    public final ImageView btn_back;
+    public final ImageView btn_play_again;
     protected final GridPane gridPane;
     protected final ColumnConstraints columnConstraints;
     protected final ColumnConstraints columnConstraints0;
@@ -65,23 +59,24 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
     protected int[][] gameBoardX;
     protected int[][] gameBoardO;
     protected boolean isDraw;
-    protected boolean noWinner;
-    protected final DisplayingVideo displayingVideo;
+    protected int playerOneScore;
+    protected int playerTwoScore;
     protected Stage currentStage;
 
     protected Dialog warningDialog;
     protected ButtonType yesButton;
     protected Optional<ButtonType> result;
-
-    protected String playerOneName;
-    protected String playerTwoName;
-    protected int startingTurn;
-
+    protected String winnerName;
+    protected String loserName;
+    protected String gameMoves;
+    protected int[] intArray;
     protected ImageView[] buttonList;
 
-    private String gameMoves;
+    public ReplyGameScreen(Stage primaryStage, String wName, String lName, String gMoves) {
 
-    public PlayerVSPlayerBoardScreen(Stage primaryStage, int turn) {
+        winnerName = wName;
+        loserName = lName;
+        gameMoves = gMoves;
 
         currentStage = primaryStage;
 
@@ -89,6 +84,7 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
         imageView = new ImageView();
         text_player_one = new Text();
         btn_back = new ImageView();
+        btn_play_again = new ImageView();
         text_player_two = new Text();
         gridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -112,25 +108,12 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
         imageView3 = new ImageView();
         gameBoardX = new int[3][3];
         gameBoardO = new int[3][3];
-        displayingVideo = new DisplayingVideo();
         isDraw = true;
-        noWinner = true;
 
-        buttonList = new ImageView[9];
+        playerOneScore = 0;
+        playerTwoScore = 0;
 
         currentTurn = 1;
-        startingTurn = turn;
-        gameMoves = "";
-
-        buttonList[0] = board_0_0;
-        buttonList[1] = board_0_1;
-        buttonList[2] = board_0_2;
-        buttonList[3] = board_1_0;
-        buttonList[4] = board_1_1;
-        buttonList[5] = board_1_2;
-        buttonList[6] = board_2_0;
-        buttonList[7] = board_2_1;
-        buttonList[8] = board_2_2;
 
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
@@ -143,14 +126,11 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
         imageView.setFitWidth(600.0);
         imageView.setImage(new Image(getClass().getResource("/images/background.png").toExternalForm()));
 
-        playerOneName = ServerConnection.getInstance().getPlayer1Name();
-        playerTwoName = ServerConnection.getInstance().getPlayer2Name();
-
         AnchorPane.setLeftAnchor(text_player_one, 15.0);
         AnchorPane.setTopAnchor(text_player_one, 15.0);
         text_player_one.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text_player_one.setStrokeWidth(0.0);
-        text_player_one.setText(playerOneName);
+        text_player_one.setText("Player 1: " + playerOneScore);
         text_player_one.setStyle("-fx-font-size: 20;");
 
         AnchorPane.setBottomAnchor(btn_back, 20.0);
@@ -163,11 +143,23 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
         btn_back.setPreserveRatio(true);
         btn_back.setImage(new Image(getClass().getResource("/images/back_button.png").toExternalForm()));
 
+        AnchorPane.setBottomAnchor(btn_play_again, 20.0);
+        AnchorPane.setRightAnchor(btn_play_again, 20.0);
+        btn_play_again.setFitHeight(50.0);
+        btn_play_again.setFitWidth(50.0);
+        btn_play_again.setLayoutX(25.0);
+        btn_play_again.setLayoutY(15.0);
+        btn_play_again.setPickOnBounds(true);
+        btn_play_again.setPreserveRatio(true);
+        btn_play_again.setVisible(false);
+        btn_play_again.setDisable(true);
+        btn_play_again.setImage(new Image(getClass().getResource("/images/again_button.png").toExternalForm()));
+
         AnchorPane.setRightAnchor(text_player_two, 15.0);
         AnchorPane.setTopAnchor(text_player_two, 15.0);
         text_player_two.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text_player_two.setStrokeWidth(0.0);
-        text_player_two.setText(playerTwoName);
+        text_player_two.setText("Player 2: " + playerTwoScore);
         text_player_two.setStyle("-fx-font-size: 20;");
 
         gridPane.setLayoutX(100.0);
@@ -338,152 +330,88 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
         getChildren().add(imageView2);
         getChildren().add(imageView3);
         getChildren().add(win_condition);
+        getChildren().add(btn_play_again);
 
-        initButtonActions();
+        buttonList = new ImageView[9];
 
-        checkStartingTurn();
+        buttonList[0] = board_0_0;
+        buttonList[1] = board_0_1;
+        buttonList[2] = board_0_2;
+        buttonList[3] = board_1_0;
+        buttonList[4] = board_1_1;
+        buttonList[5] = board_1_2;
+        buttonList[6] = board_2_0;
+        buttonList[7] = board_2_1;
+        buttonList[8] = board_2_2;
 
-    }
+        char[] charArray = gameMoves.toCharArray();
+        int[] intArray = new int[charArray.length];
+        for (int i = 0; i < charArray.length; i++) {
+            intArray[i] = Character.getNumericValue(charArray[i]);
+        }
 
-    public void initButtonActions() {
-        board_0_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_0_0, 1);
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 1);
-                diableButtons();
+        if (intArray.length % 2 != 0) {
+            text_player_one.setText(winnerName);
+            text_player_two.setText(loserName);
+        } else {
+            text_player_one.setText(loserName);
+            text_player_two.setText(winnerName);
+        }
+
+        Thread thread = new Thread(() -> {
+            for (int i : intArray) {
+                try {
+
+                    setXorO(buttonList[i - 1]);
+
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
-
-        board_0_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_0_1, 2);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 2);
-            }
-        });
-
-        board_0_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_0_2, 3);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 3);
-            }
-        });
-
-        board_1_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_1_0, 4);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 4);
-            }
-        });
-
-        board_1_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_1_1, 5);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 5);
-            }
-        });
-
-        board_1_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_1_2, 6);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 6);
-            }
-        });
-
-        board_2_0.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_2_0, 7);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 7);
-            }
-        });
-
-        board_2_1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_2_1, 8);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 8);
-            }
-        });
-
-        board_2_2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setXorO(board_2_2, 9);
-                diableButtons();
-                ServerConnection.getInstance().parseGameMove(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), 9);
-            }
-        });
+        thread.start();
 
         btn_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                leavingAlert();
-                if (result.get() == yesButton) {
-                    ServerConnection.getInstance().playerLeft();
-                    PlayOnlineScreen playOnline = new PlayOnlineScreen(currentStage);
-                    Navigation.getInstance().navigate(playOnline, currentStage);
-                    ServerConnection.getInstance().setVsPlayerID(null);
+                GameHistoryScreen gameHistoryScreen = new GameHistoryScreen(currentStage);
+                Navigation.getInstance().navigate(gameHistoryScreen, currentStage);
+            }
+        });
+
+    }
+
+    public void setXorO(ImageView clickedButton) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (currentTurn % 2 != 0) {
+                    clickedButton.setImage(new Image(getClass().getResource("/images/x_icon.png").toExternalForm()));
+                    updateGameBoard(clickedButton);
+                } else {
+                    clickedButton.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
+                    updateGameBoard(clickedButton);
                 }
             }
         });
-    }
-
-    public void setXorO(ImageView clickedButton, int index) {
-
-        gameMoves += index;
-
-        System.out.println("Moves:" + gameMoves);
-
-        if (currentTurn % 2 != 0) {
-            System.out.println("user:" + Player.getInstance().getUserName() + ", vs:" + ServerConnection.getInstance().getVsPlayerID() + ", index:" + index);
-            clickedButton.setImage(new Image(getClass().getResource("/images/x_icon.png").toExternalForm()));
-        } else {
-            System.out.println("user:" + Player.getInstance().getUserName() + ", vs:" + ServerConnection.getInstance().getVsPlayerID() + ", index:" + index);
-            clickedButton.setImage(new Image(getClass().getResource("/images/o_icon.png").toExternalForm()));
-        }
-        updateGameBoard(clickedButton);
-
-        buttonList[index - 1] = null;
 
         currentTurn++;
+        clickedButton.setDisable(true);
     }
 
     public void updateGameBoard(ImageView clickedButton) {
         int row = GridPane.getRowIndex(clickedButton);
         int column = GridPane.getColumnIndex(clickedButton);
-
         if (currentTurn % 2 != 0) {
             gameBoardX[row][column] = 1;
-            checkWinCondition(gameBoardX);
-
-            for (int[] r : gameBoardX) {
-                for (int c : r) {
-                    System.out.print(c + " ");
-                }
-                System.out.println(); // print a new line after each row
+            if (currentTurn > 4) {
+                checkWinCondition(gameBoardX);
             }
-
         } else {
             gameBoardO[row][column] = 1;
-            checkWinCondition(gameBoardO);
-            for (int[] r : gameBoardO) {
-                for (int c : r) {
-                    System.out.print(c + " ");
-                }
-                System.out.println(); // print a new line after each row
+            if (currentTurn > 4) {
+                checkWinCondition(gameBoardO);
             }
         }
 
@@ -508,58 +436,19 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
         } else if (currentGameBoard[0][2] == 1 && currentGameBoard[1][2] == 1 && currentGameBoard[2][2] == 1) {
             announceWinner(8);
         } else if (currentTurn == 9 && isDraw == true) {
-            noWinner = true;
-            diableButtons();
+            showDialog("DRAW");
         }
     }
 
     public void announceWinner(int winCondition) {
         if (currentTurn % 2 != 0) {
             drawWin(winCondition);
-            if (startingTurn == 1) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        Player.getInstance().setTotalScore(Player.getInstance().getTotalScore() + 5);
-                        displayingVideo.displayVideo("/assets/videos/Winning.mp4");
-                        ServerConnection.getInstance().updateScore(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), gameMoves);
-                    }
-                });
-
-            } else {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        displayingVideo.displayVideo("/assets/videos/Losing.mp4");
-                        Player.getInstance().setTotalScore(Player.getInstance().getTotalScore() - 3);
-                    }
-                });
-            }
-
+            showDialog("Congratulation " + winnerName + " Won");
         } else {
             drawWin(winCondition);
-            if (startingTurn == 1) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        displayingVideo.displayVideo("/assets/videos/Losing.mp4");
-                        Player.getInstance().setTotalScore(Player.getInstance().getTotalScore() - 3);
-                    }
-                });
-            } else {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        ServerConnection.getInstance().updateScore(Player.getInstance().getUserName(), ServerConnection.getInstance().getVsPlayerID(), gameMoves);
-                        Player.getInstance().setTotalScore(Player.getInstance().getTotalScore() + 5);
-                        displayingVideo.displayVideo("/assets/videos/Winning.mp4");
-                    }
-                });
-            }
+            showDialog("Congratulation " + winnerName + " Won");
         }
         isDraw = false;
-        noWinner = false;
-        diableButtons();
     }
 
     public void drawWin(int winCondition) {
@@ -640,72 +529,26 @@ public class PlayerVSPlayerBoardScreen extends AnchorPane {
         }
     }
 
-    public void computerLogic() {
+    public void showDialog(String msg) {
 
-        currentTurn++;
-        checkWinCondition(gameBoardO);
-    }
-
-    public void diableButtons() {
-        board_0_0.setDisable(true);
-        board_1_0.setDisable(true);
-        board_0_1.setDisable(true);
-        board_0_2.setDisable(true);
-        board_1_1.setDisable(true);
-        board_1_2.setDisable(true);
-        board_2_0.setDisable(true);
-        board_2_1.setDisable(true);
-        board_2_2.setDisable(true);
-    }
-
-    public void clearBoard() {
-        board_0_0.setImage(null);
-        board_1_0.setImage(null);
-        board_0_1.setImage(null);
-        board_0_2.setImage(null);
-        board_1_1.setImage(null);
-        board_1_2.setImage(null);
-        board_2_0.setImage(null);
-        board_2_1.setImage(null);
-        board_2_2.setImage(null);
-
-        win_condition.setImage(null);
-    }
-
-    public void leavingAlert() {
-
-        Dialog warningDialog = new Dialog();
-        DialogPane dialogPane = warningDialog.getDialogPane();
+        Dialog dialog = new Dialog();
+        DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setStyle("-fx-background-color: #fff;");
-        warningDialog.setContentText("Are you sure want to leave?");
-        warningDialog.setTitle("Confirmation");
+        dialog.setContentText(msg);
+        dialog.setTitle("Congratulation");
 
-        yesButton = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-        warningDialog.getDialogPane().getButtonTypes().addAll(yesButton, cancelButton);
-        dialogPane.lookupButton(cancelButton).setVisible(true);
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
 
-        Button okButton = (Button) warningDialog.getDialogPane().lookupButton(yesButton);
-        okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
-        okButton.setAlignment(Pos.CENTER);
+        dialog.getDialogPane().getButtonTypes().addAll(okButton);
 
-        result = warningDialog.showAndWait();
+        Button okButtonStyle = (Button) dialog.getDialogPane().lookupButton(okButton);
+        okButtonStyle.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: #fff;");
+        okButtonStyle.setAlignment(Pos.CENTER);
 
-    }
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.get() == okButton) {
+        } else {
 
-    private void checkStartingTurn() {
-        if (startingTurn != 1) {
-            diableButtons();
-        }
-    }
-
-    public void updateBoard(int move) {
-        setXorO(buttonList[move - 1], move);
-        System.out.println("move" + move);
-        for (ImageView button : buttonList) {
-            if (button != null) {
-                button.setDisable(false);
-            }
         }
     }
 }

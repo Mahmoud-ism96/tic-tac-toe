@@ -5,29 +5,20 @@
  */
 package tictactoe;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
-import javax.swing.JOptionPane;
-import screens.LoginScreen;
 import screens.PlayOnlineScreen;
 import screens.PlayerVSPlayerBoardScreen;
 import screens.StartScreenBase;
@@ -39,6 +30,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.stage.Modality;
+import screens.OnlinePlayerListScreenBase;
 
 public final class ServerConnection {
 
@@ -50,6 +47,43 @@ public final class ServerConnection {
     private BufferedReader bufferedReader;
     private DataInputStream inputStream;
     private List<PlayerData> allPlayers;
+    private List<Game> allGames;
+    private String player1Name;
+    private String player2Name;
+    private String vsPlayerID;
+    private PlayerVSPlayerBoardScreen currentGameScreen;
+
+    public List<Game> getAllGames() {
+        return allGames;
+    }
+
+    public void setAllGames(List<Game> allGames) {
+        this.allGames = allGames;
+    }
+
+    public String getVsPlayerID() {
+        return vsPlayerID;
+    }
+
+    public void setVsPlayerID(String vsPlayerID) {
+        this.vsPlayerID = vsPlayerID;
+    }
+
+    public String getPlayer1Name() {
+        return player1Name;
+    }
+
+    public void setPlayer1Name(String player1Name) {
+        this.player1Name = player1Name;
+    }
+
+    public String getPlayer2Name() {
+        return player2Name;
+    }
+
+    public void setPlayer2Name(String player2Name) {
+        this.player2Name = player2Name;
+    }
 
     public List<PlayerData> getAllPlayers() {
         return allPlayers;
@@ -90,7 +124,6 @@ public final class ServerConnection {
         }
     }
 
-    // TODO : FIX THE UNEXPECTED DISCONNECT EXCEPTION
     public void setUpConnection(String serverIP) {
 
         try {
@@ -126,6 +159,96 @@ public final class ServerConnection {
                 alert.setHeaderText(null);
                 alert.setContentText(errMsg);
                 alert.showAndWait();
+            }
+        });
+    }
+
+    public void requestAlert(String player1, String player2) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Request");
+                dialog.setHeaderText(null);
+                dialog.setContentText(player1 + " has invited you");
+
+                ButtonType acceptButton = new ButtonType("Accept", ButtonBar.ButtonData.OK_DONE);
+                ButtonType rejectButton = new ButtonType("Reject", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                dialog.getDialogPane().getButtonTypes().addAll(acceptButton, rejectButton);
+
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(TicTacToe.getCurrentStage());
+
+                dialog.getDialogPane().lookupButton(acceptButton).setStyle("-fx-font-size: 12px;");
+                dialog.getDialogPane().lookupButton(rejectButton).setStyle("-fx-font-size: 12px;");
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent() && result.get() == acceptButton) {
+                    parseGameAccepted(player1, player2);
+                    player1Name = player1;
+                    player2Name = Player.getInstance().getDisplayName();
+                    PlayerVSPlayerBoardScreen playerVs = new PlayerVSPlayerBoardScreen(TicTacToe.getCurrentStage(), 2);
+                    currentGameScreen = playerVs;
+                    Navigation.getInstance().navigate(playerVs, TicTacToe.getCurrentStage());
+                    OnlinePlayerListScreenBase.isRunning = false;
+                } else {
+                    parseGameRejected(player1, player2);
+                }
+            }
+        });
+    }
+
+    public void acceptAlert(String player1, String player2) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Request");
+                dialog.setHeaderText(null);
+                dialog.setContentText(player2 + " Accepted your request");
+
+                ButtonType okButton = new ButtonType("Ok", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                dialog.getDialogPane().getButtonTypes().addAll(okButton);
+
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(TicTacToe.getCurrentStage());
+
+                dialog.getDialogPane().lookupButton(okButton).setStyle("-fx-font-size: 12px;");
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent() && result.get() == okButton) {
+                    PlayerVSPlayerBoardScreen playerVs = new PlayerVSPlayerBoardScreen(TicTacToe.getCurrentStage(), 1);
+                    currentGameScreen = playerVs;
+                    Navigation.getInstance().navigate(playerVs, TicTacToe.getCurrentStage());
+                    OnlinePlayerListScreenBase.isRunning = false;
+                }
+            }
+        });
+    }
+
+    public void rejectAlert(String player1, String player2) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Request");
+                dialog.setHeaderText(null);
+                dialog.setContentText(player1 + " Rejected your request");
+
+                ButtonType okButton = new ButtonType("Ok", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                dialog.getDialogPane().getButtonTypes().addAll(okButton);
+
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(TicTacToe.getCurrentStage());
+
+                dialog.getDialogPane().lookupButton(okButton).setStyle("-fx-font-size: 12px;");
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent() && result.get() == okButton) {
+                }
             }
         });
     }
@@ -203,9 +326,7 @@ public final class ServerConnection {
                         if (jsonString != null) {
                             Gson gson = new Gson();
                             JsonElement jsonElement = gson.fromJson(jsonString, JsonElement.class);
-                            System.out.println("JsonElement: " + jsonElement);
                             JsonObject jsonObject = jsonElement.getAsJsonObject();
-                            System.out.println("JsonObject: " + jsonObject);
                             handleRequest(jsonObject);
                         }
                     } catch (IOException ex) {
@@ -236,19 +357,32 @@ public final class ServerConnection {
                 signUpRequest(jsonObject);
             }
             break;
-            case "INCOMING MOVE": {
+            case "PLAYERLEFT": {
+                playerLeftAlert(jsonObject);
             }
-            break;
-            case "PLAYER LEFT": {
-            }
-
             break;
             case "ONLINEPLAYERLIST": {
                 allPlayers = getAllPlayers(jsonObject);
-
             }
             break;
-            case "GAME REQUEST": {
+            case "GAMEREQUEST": {
+                gameRequest(jsonObject);
+            }
+            break;
+            case "GAMEACCEPTED": {
+                gameAccepted(jsonObject);
+            }
+            break;
+            case "GAMEREJECTED": {
+                gameRejected(jsonObject);
+            }
+            break;
+            case "GAMEMOVE": {
+                gameMove(jsonObject);
+            }
+            break;
+            case "GAMEHISTORY": {
+                allGames = getAllGames(jsonObject);
             }
             break;
         }
@@ -275,6 +409,8 @@ public final class ServerConnection {
 
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Login Data");
+        } else if (response.equals("exist")) {
+            failedToConnect("User Already logged in");
         }
     }
 
@@ -298,13 +434,46 @@ public final class ServerConnection {
 
         } else if (response.equals("fail")) {
             failedToConnect("Wrong Registration Data");
+        } else if (response.equals("exist")) {
+            failedToConnect("Username already exist");
         }
     }
 
-    private void incomingMoveRequest(JsonObject jsonObject) {
-        String response = jsonObject.get("response").getAsString();
-        int move = 0;
-        PlayerVSPlayerBoardScreen.updateBoard(move);
+    private void gameRequest(JsonObject jsonObject) {
+
+        JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
+        String player1 = jsonData.get("player1").getAsString();
+        String player2 = jsonData.get("player2").getAsString();
+
+        requestAlert(player1, player2);
+    }
+
+    private void gameAccepted(JsonObject jsonObject) {
+
+        JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
+        String player1 = jsonData.get("player1").getAsString();
+        String player2 = jsonData.get("player2").getAsString();
+
+        acceptAlert(player1, player2);
+    }
+
+    private void gameRejected(JsonObject jsonObject) {
+
+        JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
+        String player1 = jsonData.get("player1").getAsString();
+        String player2 = jsonData.get("player2").getAsString();
+
+        rejectAlert(player1, player2);
+    }
+
+    private void gameMove(JsonObject jsonObject) {
+        JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
+        JsonObject jsonIndex = jsonObject.get("index").getAsJsonObject();
+        String user = jsonData.get("user").getAsString();
+        String vsPlayer = jsonData.get("vsPlayer").getAsString();
+        int index = jsonIndex.get("index").getAsInt();
+
+        currentGameScreen.updateBoard(index);
     }
 
     private List<PlayerData> getAllPlayers(JsonObject jsonObject) {
@@ -316,7 +485,34 @@ public final class ServerConnection {
         }.getType();
         List<PlayerData> playerDataList = gson.fromJson(playersArray, playerDataType);
 
+        System.out.println(jsonObject);
+
         return playerDataList;
+    }
+
+    private List<Game> getAllGames(JsonObject json) {
+        JsonObject dataObject = json.getAsJsonObject("data");
+        JsonArray gamesArray = dataObject.getAsJsonArray("data");
+        Gson gson = new Gson();
+        Type gameListType = new TypeToken<List<Game>>() {
+        }.getType();
+        List<Game> gamesList = gson.fromJson(gamesArray, gameListType);
+
+        return gamesList;
+    }
+
+    private void playerLeftAlert(JsonObject jsonObject) {
+        JsonObject jsonData = jsonObject.get("data").getAsJsonObject();
+        String left = jsonData.get("left").getAsString();
+
+        PlayOnlineScreen playOnline = new PlayOnlineScreen(TicTacToe.getCurrentStage());
+        Navigation.getInstance().navigate(playOnline, TicTacToe.getCurrentStage());
+
+        System.out.println(jsonObject + "........ " + Player.getInstance().getDisplayName());
+
+        failedToConnect(left + " Has left the game");
+        ServerConnection.getInstance().setVsPlayerID(null);
+
     }
 
     public void parseSignIn(String username, String password) {
@@ -357,6 +553,8 @@ public final class ServerConnection {
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
 
+        closeConnection();
+
         printStream.println(jsonString);
     }
 
@@ -367,6 +565,116 @@ public final class ServerConnection {
         requestData.addProperty("request", request);
         jsonObject.add("request", requestData);
         String jsonString = jsonObject.toString();
+        printStream.println(jsonString);
+    }
+
+    public void parseGameRequest(String player1, String player2) {
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject sendGameObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        sendGameObject.addProperty("player1", player1);
+        sendGameObject.addProperty("player2", player2);
+        requestData.addProperty("request", "SENDGAMEREQUEST");
+        jsonObject.add("data", sendGameObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+
+        vsPlayerID = player2;
+
+        printStream.println(jsonString);
+    }
+
+    public void parseGameAccepted(String player1, String player2) {
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject sendGameObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        sendGameObject.addProperty("player1", player1);
+        sendGameObject.addProperty("player2", player2);
+        requestData.addProperty("request", "GAMEACCEPTED");
+        jsonObject.add("data", sendGameObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+
+        vsPlayerID = player1;
+
+        printStream.println(jsonString);
+    }
+
+    public void parseGameRejected(String player1, String player2) {
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject sendGameObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        sendGameObject.addProperty("player1", player1);
+        sendGameObject.addProperty("player2", player2);
+        requestData.addProperty("request", "GAMEREJECTED");
+        jsonObject.add("data", sendGameObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+
+        printStream.println(jsonString);
+    }
+
+    public void parseGameMove(String player1, String player2, int index) {
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject sendGameObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        JsonObject gameIndex = new JsonObject();
+        sendGameObject.addProperty("user", player1);
+        sendGameObject.addProperty("vsPlayer", player2);
+        requestData.addProperty("request", "GAMEMOVE");
+        gameIndex.addProperty("index", index);
+        jsonObject.add("data", sendGameObject);
+        jsonObject.add("request", requestData);
+        jsonObject.add("index", gameIndex);
+        String jsonString = jsonObject.toString();
+
+        printStream.println(jsonString);
+    }
+
+    public void updateScore(String player1, String player2, String moves) {
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject sendGameObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        sendGameObject.addProperty("winner", player1);
+        sendGameObject.addProperty("loser", player2);
+        sendGameObject.addProperty("moves", moves);
+        requestData.addProperty("request", "UPDATESCORE");
+        jsonObject.add("data", sendGameObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+        printStream.println(jsonString);
+    }
+
+    public void getGameHistory() {
+
+        JsonObject jsonObject = new JsonObject();
+        JsonObject sendGameObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        sendGameObject.addProperty("user", Player.getInstance().getUserName());
+        requestData.addProperty("request", "GAMEHISTORY");
+        jsonObject.add("data", sendGameObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+        System.out.println(jsonString);
+        printStream.println(jsonString);
+    }
+
+    public void playerLeft() {
+        JsonObject jsonObject = new JsonObject();
+        JsonObject sendGameObject = new JsonObject();
+        JsonObject requestData = new JsonObject();
+        sendGameObject.addProperty("playing", vsPlayerID);
+        sendGameObject.addProperty("left", Player.getInstance().getDisplayName());
+        requestData.addProperty("request", "PLAYERLEFT");
+        jsonObject.add("data", sendGameObject);
+        jsonObject.add("request", requestData);
+        String jsonString = jsonObject.toString();
+        System.out.println(jsonString);
         printStream.println(jsonString);
     }
 

@@ -142,6 +142,13 @@ public class PlayOnlineScreen extends AnchorPane {
                 Navigation.getInstance().navigate(OnlinePlayerListScreen, currentStage);
             }
         });
+        gameHistoryBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                GameHistoryScreen gameHistoryScreen = new GameHistoryScreen(currentStage);
+                Navigation.getInstance().navigate(gameHistoryScreen, currentStage);
+            }
+        });
     }
 
 }

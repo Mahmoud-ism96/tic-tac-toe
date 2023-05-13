@@ -11,28 +11,30 @@ package tictactoe;
  */
 public class PlayerData {
 
-    private String userName;
-    private String displayName;
+    private String user_id;
+    private String display_name;
     private int score;
+    private boolean status;
 
-    public PlayerData(String displayName) {
-        this.displayName = displayName;
+    public PlayerData(String display_name, String user_id) {
+        this.display_name = display_name;
+        this.user_id = user_id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getDisplay_name() {
+        return display_name;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setDisplay_name(String display_name) {
+        this.display_name = display_name;
     }
 
     public int getScore() {
@@ -43,4 +45,13 @@ public class PlayerData {
         this.score = score;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    
 }

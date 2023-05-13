@@ -10,8 +10,8 @@ import static javafx.application.Application.launch;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import screens.PlayOnlineScreen;
+import screens.GameHistoryScreen;
+import screens.OnlinePlayerListScreenBase;
 import screens.StartScreenBase;
 
 /**
@@ -22,15 +22,31 @@ public class TicTacToe extends Application {
 
     StartScreenBase startScreen;
     Scene startScene;
-    
+
     private static Stage currentStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
+
         currentStage = primaryStage;
 
         initStartScreen(primaryStage);
+
+        primaryStage.setOnCloseRequest(event -> {
+            if (ServerConnection.getInstance().getVsPlayerID() != null) {
+                ServerConnection.getInstance().playerLeft();
+            }
+            OnlinePlayerListScreenBase.isRunning = false;
+            GameHistoryScreen.isRunning = false;
+        });
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (ServerConnection.getInstance().getVsPlayerID() != null) {
+                ServerConnection.getInstance().playerLeft();
+            }
+            OnlinePlayerListScreenBase.isRunning = false;
+            GameHistoryScreen.isRunning = false;
+        }));
 
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(startScene);
@@ -46,7 +62,6 @@ public class TicTacToe extends Application {
     public static Stage getCurrentStage() {
         return currentStage;
     }
-
 
     public static void main(String[] args) {
         launch(args);

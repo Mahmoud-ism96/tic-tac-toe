@@ -18,18 +18,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import tictactoe.Game;
 import tictactoe.Navigation;
 import tictactoe.Player;
-import tictactoe.PlayerData;
 import tictactoe.ServerConnection;
 
-public class OnlinePlayerListScreenBase extends AnchorPane {
+public class GameHistoryScreen extends AnchorPane {
 
-    private ObservableList<PlayerData> players;
-    private ListView<PlayerData> listView;
+    private ObservableList<Game> games;
+    private ListView<Game> gameListView;
 
     public final ImageView icon_back;
     protected Image img_back;
@@ -42,43 +44,54 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
 
     protected Thread refreshThread;
 
-    OnlinePlayerListScreenBase(Stage primaryStage) {
+    GameHistoryScreen(Stage primaryStage) {
 
         currentStage = primaryStage;
 
-        players = FXCollections.observableArrayList();
+        games = FXCollections.observableArrayList();
 
         isRunning = true;
 
-        listView = new ListView<>(players);
-        listView.setPrefWidth(400);
-        listView.setCellFactory(new Callback<ListView<PlayerData>, ListCell<PlayerData>>() {
+        gameListView = new ListView<>(games);
+        gameListView.setPrefWidth(400);
+        gameListView.setCellFactory(new Callback<ListView<Game>, ListCell<Game>>() {
             @Override
-            public ListCell<PlayerData> call(ListView<PlayerData> listView) {
-                return new ListCell<PlayerData>() {
+            public ListCell<Game> call(ListView<Game> listView) {
+                return new ListCell<Game>() {
                     @Override
-                    protected void updateItem(PlayerData player, boolean empty) {
-                        super.updateItem(player, empty);
-                        if (player != null) {
+                    protected void updateItem(Game game, boolean empty) {
+                        super.updateItem(game, empty);
+                        if (game != null) {
                             HBox hbox = new HBox();
                             hbox.setStyle("-fx-background-color: #ECEBE4;");
-                            Label nameLabel = new Label(player.getDisplay_name());
-                            nameLabel.setPrefWidth(100);
-                            HBox.setHgrow(nameLabel, Priority.ALWAYS);
-                            Button button = new Button("Request");
-                            button.setStyle("-fx-font-size: 10px;");
-                            hbox.getChildren().addAll(nameLabel, button);
+
+                            Label winnerLabel = new Label(game.getWINNER_NAME());
+                            winnerLabel.setTextFill(Color.GREEN);
+
+                            Label vsLabel = new Label(" vs ");
+
+                            Label loserLabel = new Label(game.getLOSER_NAME());
+                            loserLabel.setTextFill(Color.RED);
+
+                            Label dateLabel = new Label(game.getGAME_DATE().toString());
+
+                            Button viewButton = new Button("Replay");
+                            viewButton.setStyle("-fx-font-size: 10px;");
+
+                            hbox.getChildren().addAll(winnerLabel, vsLabel, loserLabel, new Region(), dateLabel, new Region(), viewButton);
                             hbox.setAlignment(Pos.CENTER_LEFT);
-                            hbox.setSpacing(280);
+                            hbox.setSpacing(10);
+                            HBox.setHgrow(hbox.getChildren().get(3), Priority.ALWAYS);
+                            HBox.setHgrow(hbox.getChildren().get(5), Priority.ALWAYS);
                             hbox.setPadding(new Insets(5, 10, 5, 10));
+
                             setGraphic(hbox);
 
-                            button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                            viewButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                                 @Override
                                 public void handle(MouseEvent event) {
-                                    ServerConnection.getInstance().parseGameRequest(Player.getInstance().getUserName(), player.getUser_id());
-                                    ServerConnection.getInstance().setPlayer1Name(Player.getInstance().getUserName());
-                                    ServerConnection.getInstance().setPlayer2Name(player.getDisplay_name());
+                                    ReplyGameScreen replyGameScreen = new ReplyGameScreen(currentStage, game.getWINNER_NAME(), game.getLOSER_NAME(), game.getGAME_MOVES());
+                                    Navigation.getInstance().navigate(replyGameScreen, currentStage);
                                 }
                             });
                         } else {
@@ -90,12 +103,12 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
         });
 
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(listView);
+        scrollPane.setContent(gameListView);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
-        scrollPane.prefWidthProperty().bind(listView.widthProperty());
-        scrollPane.prefHeightProperty().bind(listView.heightProperty());
+        scrollPane.prefWidthProperty().bind(gameListView.widthProperty());
+        scrollPane.prefHeightProperty().bind(gameListView.heightProperty());
 
         Image backgroundImage = new Image("/images/background.png");
         ImageView backgroundImageView = new ImageView(backgroundImage);
@@ -121,7 +134,7 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
 
         text.setLayoutX(200.0);
         text.setLayoutY(60.0);
-        text.setText("Let's Play Online");
+        text.setText("Game History");
         text.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
 
         anchorPane.getChildren().add(logoImage);
@@ -149,8 +162,8 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
                 try {
                     while (isRunning) {
                         if (ServerConnection.getConnectionState()) {
-                            ServerConnection.getInstance().parsePlayerList();
-                            updateListView(ServerConnection.getInstance().getAllPlayers());
+                            ServerConnection.getInstance().getGameHistory();
+                            updateListView(ServerConnection.getInstance().getAllGames());
                         }
                         Thread.sleep(1000);
                     }
@@ -175,30 +188,29 @@ public class OnlinePlayerListScreenBase extends AnchorPane {
         });
     }
 
-    public ObservableList<PlayerData> getPlayers() {
-        return players;
+    public ObservableList<Game> getGames() {
+        return games;
     }
 
-    public ListView<PlayerData> getListView() {
-        return listView;
+    public ListView<Game> getGameListView() {
+        return gameListView;
     }
 
-    public void updateListView(List<PlayerData> allPlayers) {
+    public void updateListView(List<Game> allGames) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (players != null) {
-                    players.clear();
+                if (games != null) {
+                    games.clear();
                 }
 
-                if (allPlayers != null) {
-                    for (PlayerData playerData : allPlayers) {
-                        PlayerData player = new PlayerData(playerData.getDisplay_name(), playerData.getUser_id());
-                        players.add(player);
+                if (allGames != null) {
+                    for (Game game : allGames) {
+                        games.add(game);
                     }
                 }
 
-                listView.refresh();
+                gameListView.refresh();
             }
         });
 
