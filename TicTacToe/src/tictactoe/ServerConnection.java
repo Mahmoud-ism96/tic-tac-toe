@@ -399,6 +399,8 @@ public final class ServerConnection {
             int totalScore = jsonData.get("totalScore").getAsInt();
             String userId = jsonData.get("userId").getAsString();
 
+            System.out.println(jsonObject);
+
             Player.getInstance().setDisplayName(displayName);
             Player.getInstance().setTotalScore(totalScore);
             Player.getInstance().setUserName(userId);
